@@ -1,0 +1,106 @@
+.math-game {
+  background-color: #FDFCDC;
+  font-family: 'Comic Sans MS', cursive, sans-serif;
+  text-align: center;
+  padding: 2rem;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.math-game h2,
+.math-game h3,
+.math-game h1 {
+  color: #0081A7;
+  margin: 0.5rem 0;
+}
+
+.math-game .body-img {
+  width: 200px;
+  height: auto;
+  margin: 1rem 0;
+  border-radius: 1rem;
+  background-color: white;
+  padding: 0.5rem;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.options {
+  margin-top: 2rem;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 1rem;
+}
+
+.options button {
+  background-color: #00AFB9;
+  color: white;
+  border: none;
+  padding: 0.7rem 2rem;
+  border-radius: 30px;
+  font-size: 1.2rem;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.2s ease, transform 0.2s ease;
+  min-width: 120px;
+}
+
+.options button:hover {
+  background-color: #0081A7;
+  transform: scale(1.05);
+}
+
+.end-screen {
+  background-color: #ffffffcc;
+  padding: 2rem;
+  border-radius: 20px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+  text-align: center;
+  margin-top: 2rem;
+  animation: popIn 0.5s ease-out;
+}
+
+@keyframes popIn {
+  0% {
+    transform: scale(0.5);
+    opacity: 0;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+.end-screen h2 {
+  font-size: 2rem;
+  color: #F07167;
+  margin-bottom: 1rem;
+}
+
+.end-screen h3 {
+  color: #0081A7;
+  font-size: 1.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.end-screen button {
+  margin: 0.5rem;
+  background-color: #00AFB9;
+  color: white;
+  border: none;
+  padding: 0.6rem 1.5rem;
+  border-radius: 25px;
+  font-size: 1.1rem;
+  font-weight: bold;
+  cursor: pointer;
+  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.15);
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.end-screen button:hover {
+  background-color: #F07167;
+  transform: scale(1.05);
+}

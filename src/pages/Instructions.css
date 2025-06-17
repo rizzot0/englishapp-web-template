@@ -1,0 +1,55 @@
+.instructions-page {
+  background-color: #FDFCDC;
+  font-family: 'Comic Sans MS', cursive, sans-serif;
+  padding: 2rem;
+  text-align: center;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.instructions-page h1 {
+  color: #0081A7;
+  margin-bottom: 2rem;
+}
+
+.cards-container {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  width: 100%;
+  max-width: 600px;
+}
+
+.instruction-card {
+  background-color: #FED9B7;
+  border-left: 8px solid #F07167;
+  padding: 1.2rem;
+  border-radius: 15px;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+  transition: transform 0.2s ease;
+}
+
+.instruction-card h2 {
+  margin: 0 0 0.5rem;
+  color: #00AFB9;
+}
+
+.instruction-card p {
+  margin: 0;
+  color: #333;
+}
+
+.back-btn {
+  margin-top: 2rem;
+  background-color: #00AFB9;
+  color: white;
+  border: none;
+  padding: 0.7rem 2rem;
+  border-radius: 25px;
+  font-size: 1.1rem;
+  font-weight: bold;
+  cursor: pointer;
+  box-shadow: 0 3px 6px rgba(0,0,0,0.2);
+}

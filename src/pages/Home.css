@@ -1,0 +1,81 @@
+.home-menu {
+  background-color: #FDFCDC;
+  text-align: center;
+  padding: 2rem;
+  font-family: 'Comic Sans MS', cursive, sans-serif;
+  min-height: 100vh;
+}
+
+.home-menu h1 {
+  font-size: 2.5rem;
+  color: #0081A7;
+  margin-bottom: 0.5rem;
+}
+
+.home-menu h2 {
+  font-size: 1.5rem;
+  color: #00AFB9;
+  margin-bottom: 2rem;
+}
+
+.game-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 2rem;
+  justify-content: center;
+  max-width: 500px;
+  margin: 0 auto 2rem;
+}
+
+.game-card {
+  background-color: #FED9B7;
+  border-radius: 20px;
+  padding: 1rem;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+  transition: transform 0.3s ease;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.game-card:hover {
+  transform: scale(1.05);
+}
+
+.game-card img {
+  width: 100px;
+  height: 100px;
+  margin-bottom: 1rem;
+}
+
+.game-card button {
+  background-color: #F07167;
+  color: white;
+  border: none;
+  padding: 0.5rem 1.2rem;
+  border-radius: 15px;
+  font-size: 1.1rem;
+  cursor: pointer;
+  font-family: 'Comic Sans MS', cursive, sans-serif;
+}
+
+.menu-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 1.5rem;
+  margin-top: 2rem;
+}
+
+.music-btn,
+.instructions-btn {
+  background-color: #00AFB9;
+  color: white;
+  border: none;
+  padding: 0.6rem 1.4rem;
+  border-radius: 25px;
+  font-size: 1rem;
+  font-weight: bold;
+  cursor: pointer;
+  font-family: 'Comic Sans MS', cursive, sans-serif;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+}

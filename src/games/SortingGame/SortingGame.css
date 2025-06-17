@@ -1,0 +1,116 @@
+.sorting-game {
+  background-color: #FDFCDC;
+  font-family: 'Comic Sans MS', cursive, sans-serif;
+  min-height: 100vh;
+  padding: 2rem;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+}
+
+.sorting-game h2 {
+  color: #0081A7;
+  font-size: 2rem;
+  margin-bottom: 1.5rem;
+}
+
+.items-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+  max-height: 60vh;
+  overflow-y: auto;
+  padding: 1rem;
+  width: 90%;
+  max-width: 400px;
+}
+
+.sortable-item {
+  background-color: #FED9B7;
+  color: #333;
+  padding: 0.8rem 1.2rem;
+  border-radius: 20px;
+  font-size: 1.2rem;
+  font-weight: bold;
+  cursor: grab;
+  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
+  user-select: none;
+  transition: background-color 0.2s ease, transform 0.2s ease;
+}
+
+.sortable-item:active {
+  cursor: grabbing;
+}
+
+.buttons {
+  display: flex;
+  gap: 1rem;
+  margin: 1.5rem 0;
+}
+
+.buttons button {
+  background-color: #00AFB9;
+  color: white;
+  border: none;
+  padding: 0.7rem 1.6rem;
+  border-radius: 25px;
+  font-size: 1.1rem;
+  font-weight: bold;
+  cursor: pointer;
+  box-shadow: 0 3px 6px rgba(0,0,0,0.2);
+  transition: background-color 0.2s ease;
+}
+
+.buttons button:hover {
+  background-color: #0081A7;
+}
+
+.result {
+  margin-top: 2rem;
+  padding: 1rem 2rem;
+  border-radius: 15px;
+  width: fit-content;
+  max-width: 90%;
+}
+
+.correct {
+  background-color: #C2F970;
+  color: #355E3B;
+  box-shadow: 0 0 10px rgba(100, 200, 100, 0.3);
+}
+
+.incorrect {
+  background-color: #FFB5B5;
+  color: #990000;
+  box-shadow: 0 0 10px rgba(255, 0, 0, 0.2);
+}
+
+.result h3 {
+  margin: 0.5rem 0;
+  font-size: 1.6rem;
+}
+
+.result p {
+  font-size: 1.1rem;
+  margin-bottom: 1rem;
+}
+
+.result button {
+  background-color: #00AFB9;
+  color: white;
+  border: none;
+  padding: 0.6rem 1.4rem;
+  margin: 0.4rem;
+  border-radius: 25px;
+  font-size: 1rem;
+  font-weight: bold;
+  cursor: pointer;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.15);
+  transition: background-color 0.2s ease;
+}
+
+.result button:hover {
+  background-color: #F07167;
+}
