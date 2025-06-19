@@ -1,7 +1,9 @@
 // src/games/MemoryGame/MemoryGame.jsx
 import React, { useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
+import { AnimatePresence, motion } from 'framer-motion';
 import './MemoryGame.css';
+import { loadSound, playSound } from '../../utils/soundManager';
 
 const themes = {
   fruits: [
@@ -40,8 +42,15 @@ const MemoryGame = () => {
   const [flipped, setFlipped] = useState([]);
   const [matched, setMatched] = useState([]);
   const [score, setScore] = useState(0);
+  const [showWin, setShowWin] = useState(false);
+
+  const totalPairs = (themes[selectedTheme] || []).length;
 
   useEffect(() => {
+    loadSound('cardFlip.wav');
+    loadSound('correct.wav');
+    loadSound('win.wav');
+
     const pairs = themes[selectedTheme] || themes.fruits;
     const mixed = pairs.flatMap(({ word, image }) => [
       { id: word, type: 'word', value: word },
@@ -53,10 +62,14 @@ const MemoryGame = () => {
     setMatched([]);
     setFlipped([]);
     setScore(0);
+    setShowWin(false);
   }, [selectedTheme]);
 
   const handleClick = (index) => {
     if (flipped.length === 2 || flipped.includes(index) || matched.includes(cards[index].id)) return;
+
+    playSound('cardFlip.wav');
+
     const newFlipped = [...flipped, index];
     setFlipped(newFlipped);
 
@@ -66,15 +79,26 @@ const MemoryGame = () => {
       const c2 = cards[i2];
 
       if (c1.id === c2.id && c1.type !== c2.type) {
-        setMatched((prev) => [...prev, c1.id]);
+        setMatched((prev) => {
+          const updated = [...prev, c1.id];
+          playSound('correct.wav');
+
+          if (updated.length === totalPairs) {
+            setTimeout(() => {
+              playSound('win.wav');
+              setShowWin(true);
+            }, 800);
+          }
+
+          return updated;
+        });
+
         setScore(prev => prev + 1);
       }
+
       setTimeout(() => setFlipped([]), 1000);
     }
   };
-
-  const totalPairs = (themes[selectedTheme] || []).length;
-  const isGameOver = matched.length === totalPairs;
 
   return (
     <div className="memory-game">
@@ -83,14 +107,20 @@ const MemoryGame = () => {
         {cards.map((card, index) => {
           const isFlipped = flipped.includes(index) || matched.includes(card.id);
           return (
-            <div key={card.uid} className="card" onClick={() => handleClick(index)}>
-              <div className={`card-inner ${isFlipped ? 'flipped' : ''}`}>
+            <div
+              key={card.uid}
+              className={`card ${isFlipped ? 'flipped' : ''}`}
+              onClick={() => handleClick(index)}
+            >
+              <div className="card-inner">
                 <div className="card-front"></div>
                 <div className="card-back">
                   {card.type === 'image' ? (
                     <img src={`/assets/images/${card.value}`} alt={card.id} />
                   ) : (
-                    <span style={{ fontSize: '1.1rem', fontWeight: 'bold', color: '#0081A7' }}>{card.value}</span>
+                    <span style={{ fontSize: '1.1rem', fontWeight: 'bold', color: '#0081A7' }}>
+                      {card.value}
+                    </span>
                   )}
                 </div>
               </div>
@@ -98,10 +128,30 @@ const MemoryGame = () => {
           );
         })}
       </div>
-      <button className="play-btn" onClick={() => window.location.reload()}>Reiniciar juego</button>
-      {isGameOver && (
-        <button className="play-btn" onClick={() => navigate('/')}>Volver al menú</button>
+
+      {/* 🔁 Solo mostrar reiniciar si aún no se gana */}
+      {!showWin && (
+        <button className="play-btn" onClick={() => window.location.reload()}>
+          Reiniciar juego
+        </button>
       )}
+
+      {/* 🎉 Animación de victoria */}
+      <AnimatePresence>
+        {showWin && (
+          <motion.div
+            className="win-popup"
+            initial={{ scale: 0.8, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            exit={{ scale: 0.8, opacity: 0 }}
+            transition={{ duration: 0.5 }}
+          >
+            <h2>🎉 ¡Ganaste!</h2>
+            <p>Has encontrado todos los pares</p>
+            <button onClick={() => navigate('/')}>Volver al menú</button>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 };

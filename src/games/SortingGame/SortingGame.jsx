@@ -3,6 +3,7 @@ import React, { useState, useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import './SortingGame.css';
+import { loadSound, playSound } from '../../utils/soundManager';
 
 const themeItems = {
   days: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'],
@@ -22,55 +23,76 @@ export default function SortingGame() {
   const [items, setItems] = useState([]);
   const [original, setOriginal] = useState([]);
   const [isCorrect, setIsCorrect] = useState(null);
+  const [selectedIndex, setSelectedIndex] = useState(null);
 
   useEffect(() => {
     const list = themeItems[theme];
     setOriginal(list);
     setItems(shuffle(list));
+    loadSound('cardFlip.wav');
+    loadSound('correct.wav');
+    loadSound('incorrect.wav');
+    loadSound('win.wav');
   }, [theme]);
 
   const shuffle = (arr) => [...arr].sort(() => Math.random() - 0.5);
 
+  const isMobile = () => window.innerWidth <= 768;
+
+  const handleItemClick = (index) => {
+    if (!isMobile()) return;
+
+    if (selectedIndex === null) {
+      setSelectedIndex(index);
+    } else {
+      const newItems = [...items];
+      const temp = newItems[selectedIndex];
+      newItems[selectedIndex] = newItems[index];
+      newItems[index] = temp;
+      setItems(newItems);
+      setSelectedIndex(null);
+      playSound('cardFlip.wav'); // sonido intercambio en móvil
+    }
+  };
+
   const handleDragStart = (e, index) => {
+    if (isMobile()) return;
     e.dataTransfer.setData('text/plain', index);
   };
 
   const handleDrop = (e, index) => {
+    if (isMobile()) return;
     const draggedIndex = e.dataTransfer.getData('text/plain');
     if (draggedIndex === '') return;
     const newItems = [...items];
     const [draggedItem] = newItems.splice(draggedIndex, 1);
     newItems.splice(index, 0, draggedItem);
     setItems(newItems);
+    playSound('cardFlip.wav'); // sonido arrastrar y soltar
   };
 
-  const handleDragOver = (e) => e.preventDefault();
+  const handleDragOver = (e) => {
+    if (!isMobile()) e.preventDefault();
+  };
 
   const checkOrder = () => {
-    if (items.join(',') === original.join(',')) {
-      setIsCorrect(true);
-    } else {
-      setIsCorrect(false);
+    const isRight = items.join(',') === original.join(',');
+    setIsCorrect(isRight);
+    playSound(isRight ? 'correct.wav' : 'incorrect.wav');
+    if (isRight) {
+      setTimeout(() => playSound('win.wav'), 500);
     }
   };
 
   const reset = () => {
     setItems(shuffle(original));
     setIsCorrect(null);
+    setSelectedIndex(null);
   };
 
   return (
-    <motion.div
-      className="sorting-game"
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      transition={{ duration: 0.5 }}
-    >
-      <motion.h2
-        initial={{ y: -20, opacity: 0 }}
-        animate={{ y: 0, opacity: 1 }}
-        transition={{ duration: 0.5 }}
-      >
+    <motion.div className="sorting-game" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.5 }}>
+      <motion.h2 initial={{ y: -20, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ duration: 0.5 }}>
         Order Game - {theme === 'days' ? 'Days of the Week' : theme === 'months' ? 'Months of the Year' : 'Seasons'}
       </motion.h2>
 
@@ -78,8 +100,9 @@ export default function SortingGame() {
         {items.map((item, index) => (
           <motion.div
             key={index}
-            className="sortable-item"
-            draggable
+            className={`sortable-item ${selectedIndex === index ? 'selected' : ''}`}
+            draggable={!isMobile()}
+            onClick={() => handleItemClick(index)}
             onDragStart={(e) => handleDragStart(e, index)}
             onDrop={(e) => handleDrop(e, index)}
             onDragOver={handleDragOver}
@@ -97,35 +120,30 @@ export default function SortingGame() {
         <motion.button whileHover={{ scale: 1.05 }} onClick={reset}>🔄 Reiniciar</motion.button>
       </div>
 
-      <AnimatePresence>
-        {isCorrect === true && (
-          <motion.div
-            className="result correct"
-            initial={{ opacity: 0, scale: 0.7 }}
-            animate={{ opacity: 1, scale: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.4 }}
-          >
-            <h3>🎉 ¡Correcto!</h3>
-            <p>🎊 ¡Ordenaste todos los elementos correctamente!</p>
-            <button onClick={reset}>🔁 Seguir</button>
-            <button onClick={() => navigate('/')}>🏠 Volver al Menú</button>
-          </motion.div>
-        )}
+<AnimatePresence>
+  {isCorrect === true && (
+    <motion.div
+      className="sorting-end-wrapper"
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+    >
+      <motion.div
+        className="sorting-end-popup"
+        initial={{ scale: 0.8, opacity: 0 }}
+        animate={{ scale: 1, opacity: 1 }}
+        exit={{ scale: 0.8, opacity: 0 }}
+        transition={{ duration: 0.4 }}
+      >
+        <h2>🎉 ¡Correcto!</h2>
+        <p>🎊 ¡Ordenaste todos los elementos correctamente!</p>
+        <button onClick={reset}>🔁 Seguir</button>
+        <button onClick={() => navigate('/')}>🏠 Volver al Menú</button>
+      </motion.div>
+    </motion.div>
+  )}
+</AnimatePresence>
 
-        {isCorrect === false && (
-          <motion.div
-            className="result incorrect"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.3 }}
-          >
-            <h3>❌ ¡Incorrecto!</h3>
-            <p>Inténtalo de nuevo. ¡Puedes hacerlo!</p>
-          </motion.div>
-        )}
-      </AnimatePresence>
     </motion.div>
   );
 }

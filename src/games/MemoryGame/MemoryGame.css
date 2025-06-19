@@ -1,35 +1,40 @@
-
 .memory-game {
   background-color: #FDFCDC;
   text-align: center;
-  padding: 2rem;
+  padding: 2rem 1rem;
   font-family: 'Comic Sans MS', cursive, sans-serif;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 .memory-game h2 {
   color: #0081A7;
-  font-size: 2.2rem;
+  font-size: clamp(1.8rem, 4vw, 2.4rem);
   margin-bottom: 0.5rem;
 }
 
 .memory-game p {
-  font-size: 1.3rem;
+  font-size: clamp(1rem, 3.5vw, 1.3rem);
   color: #F07167;
   margin-bottom: 1.5rem;
 }
 
+/* Responsive grid layout */
 .grid {
   display: grid;
-  grid-template-columns: repeat(4, 100px);
   gap: 1rem;
   justify-content: center;
   margin: 0 auto;
+  grid-template-columns: repeat(auto-fit, minmax(80px, 1fr));
+  max-width: 440px;
 }
 
 .card {
-  width: 100px;
-  height: 100px;
-  perspective: 600px;
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  perspective: 800px;
 }
 
 .card-inner {
@@ -41,10 +46,6 @@
 }
 
 .card.flipped .card-inner {
-  transform: rotateY(180deg);
-}
-
-.card-inner.flipped {
   transform: rotateY(180deg);
 }
 
@@ -73,4 +74,23 @@
 .card-back img {
   width: 80%;
   height: auto;
+  max-height: 80%;
+}
+
+.play-btn {
+  margin-top: 1.5rem;
+  background-color: #00AFB9;
+  color: white;
+  border: none;
+  padding: 0.7rem 2rem;
+  border-radius: 25px;
+  font-size: 1.2rem;
+  font-weight: bold;
+  cursor: pointer;
+  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.2);
+  transition: background-color 0.3s ease;
+}
+
+.play-btn:hover {
+  background-color: #0081A7;
 }

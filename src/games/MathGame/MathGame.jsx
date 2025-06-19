@@ -1,11 +1,13 @@
 // src/games/MathGame/MathGame.jsx
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import './MathGame.css';
 import { motion, AnimatePresence } from 'framer-motion';
+import { loadSound, playSound } from '../../utils/soundManager';
+import './MathGame.css';
 
-const bodyParts = [
-  { name: 'eye', image: 'eye.png' },
+
+const bodyParts = [ 
+  { name: 'eye', image: 'eye.png' },  
   { name: 'nose', image: 'nose.png' },
   { name: 'mouth', image: 'mouth.png' },
   { name: 'ear', image: 'ear.png' },
@@ -30,7 +32,16 @@ export default function MathGame() {
   const [showEnd, setShowEnd] = useState(false);
   const timerRef = useRef(null);
 
+  const [clickedIndex, setClickedIndex] = useState(null);
+  const [isCorrect, setIsCorrect] = useState(null);
+
   useEffect(() => {
+
+     // Cargar efectos de sonido
+    loadSound('correct.wav');
+    loadSound('incorrect.wav');
+    loadSound('alarm.wav');
+
     startTimer();
     generateQuestion();
     return () => clearInterval(timerRef.current);
@@ -39,6 +50,7 @@ export default function MathGame() {
   useEffect(() => {
     if (time <= 0) {
       clearInterval(timerRef.current);
+      playSound('alarm.wav');
       setShowEnd(true);
     }
   }, [time]);
@@ -82,12 +94,26 @@ export default function MathGame() {
     }
   };
 
-  const handleOptionClick = (selected) => {
-    if (selected === answer || selected === numberToWord(answer)) {
-      setScore(prev => prev + 1);
-    }
+const handleOptionClick = (selected, index) => {
+  const correct = selected === answer || selected === numberToWord(answer);
+  setClickedIndex(index);
+  setIsCorrect(correct);
+
+  if (correct) {
+    playSound('correct.wav');
+    setScore(prev => prev + 1);
+  } else {
+    playSound('incorrect.wav');
+  }
+
+  // Espera 600ms para mostrar la animación antes de avanzar
+  setTimeout(() => {
+    setClickedIndex(null);
+    setIsCorrect(null);
     generateQuestion();
-  };
+  }, 600);
+};
+
 
   const shuffle = (arr) => [...arr].sort(() => Math.random() - 0.5);
 
@@ -109,46 +135,60 @@ export default function MathGame() {
 
   return (
     <div className="math-game">
-      <motion.h2 initial={{ opacity: 0 }} animate={{ opacity: 1 }}>Time: {time}</motion.h2>
-      <motion.h3 initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.2 }}>Score: {score}</motion.h3>
+      <motion.h2 initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
+        Time: {time}
+      </motion.h2>
+      <motion.h3 initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.2 }}>
+        Score: {score}
+      </motion.h3>
 
-      <motion.div initial={{ scale: 0.9, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} transition={{ delay: 0.3 }}>
+      <motion.div
+        className="question-container"
+        initial={{ scale: 0.9, opacity: 0 }}
+        animate={{ scale: 1, opacity: 1 }}
+        transition={{ delay: 0.3 }}
+      >
         {theme === 'math' ? (
-          <h1>{question}</h1>
+          <h1 className="math-question">{question}</h1>
         ) : (
           <img src={`/assets/images/${image}`} alt="part" className="body-img" />
         )}
       </motion.div>
 
       <motion.div className="options" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.4 }}>
-        {options.map((opt, i) => (
-          <motion.button
-            key={i}
-            onClick={() => handleOptionClick(opt)}
-            whileHover={{ scale: 1.1 }}
-            whileTap={{ scale: 0.95 }}
-          >
-            {opt}
-          </motion.button>
-        ))}
+        {options.map((opt, i) => {
+          const isSelected = i === clickedIndex;
+          return (
+            <motion.button
+              key={i}
+              onClick={() => handleOptionClick(opt, i)}
+              className={`option-button ${isSelected && isCorrect === true ? 'correct' : ''} ${isSelected && isCorrect === false ? 'incorrect' : ''}`}
+              animate={isSelected && isCorrect === true ? { scale: [1, 1.2, 1] } :
+                      isSelected && isCorrect === false ? { x: [-5, 5, -5, 5, 0] } : {}}
+              transition={{ duration: 0.4 }}
+            >
+              {opt}
+            </motion.button>
+          );
+        })}
       </motion.div>
-
       <AnimatePresence>
         {showEnd && (
           <motion.div
             className="end-screen"
-            initial={{ opacity: 0, scale: 0.5 }}
-            animate={{ opacity: 1, scale: 1 }}
-            exit={{ opacity: 0, scale: 0.5 }}
-            transition={{ duration: 0.5 }}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
           >
-            <h2>🎉 ¡Tiempo terminado!</h2>
-            <h3>Tu puntaje fue: {score}</h3>
-            <button onClick={restart}>Reiniciar</button>
-            <button onClick={() => navigate('/')}>Volver al Menú</button>
+            <div className="end-modal">
+              <h2>🎉 ¡Tiempo terminado!</h2>
+              <h3>Tu puntaje fue: {score}</h3>
+              <button onClick={restart}>Reiniciar</button>
+              <button onClick={() => navigate('/')}>Volver al Menú</button>
+            </div>
           </motion.div>
         )}
       </AnimatePresence>
     </div>
-  );  
+  );
 }

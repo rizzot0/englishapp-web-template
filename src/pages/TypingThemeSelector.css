@@ -1,7 +1,7 @@
 .typing-selector {
   background-color: #FDFCDC;
   font-family: 'Comic Sans MS', cursive, sans-serif;
-  padding: 2rem;
+  padding: 2rem 1rem;
   text-align: center;
   min-height: 100vh;
   display: flex;
@@ -11,7 +11,7 @@
 }
 
 .typing-selector h2 {
-  font-size: 1.8rem;
+  font-size: clamp(1.5rem, 4vw, 2rem);
   color: #0081A7;
   margin-bottom: 2rem;
 }
@@ -23,8 +23,8 @@
   padding: 0.6rem 1.5rem;
   margin: 0.6rem 0;
   border-radius: 25px;
-  font-size: 1.2rem;
-  width: 200px;
+  font-size: clamp(1.1rem, 3vw, 1.3rem);
+  width: min(80vw, 220px);
   box-shadow: 0 4px 8px rgba(0,0,0,0.15);
   cursor: pointer;
   transition: transform 0.2s ease;
@@ -48,8 +48,14 @@
   padding: 0.7rem 2rem;
   margin-top: 2rem;
   border-radius: 25px;
-  font-size: 1.2rem;
+  font-size: clamp(1.1rem, 3vw, 1.3rem);
   font-weight: bold;
   cursor: pointer;
   box-shadow: 0 3px 6px rgba(0,0,0,0.2);
+  width: min(80vw, 220px);
+  transition: transform 0.2s ease;
+}
+
+.start-btn:hover {
+  transform: scale(1.05);
 }

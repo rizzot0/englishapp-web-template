@@ -3,6 +3,7 @@ import React, { useEffect, useState, useRef } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import './TypingGame.css';
 import { motion, AnimatePresence } from 'framer-motion';
+import { loadSound, playSound } from '../../utils/soundManager';
 
 const wordSets = {
   fruits: [
@@ -53,44 +54,59 @@ export default function TypingGame() {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [typed, setTyped] = useState('');
   const [score, setScore] = useState(0);
-  const [time, setTime] = useState(60);
+  const [time, setTime] = useState(60); 
   const [showEnd, setShowEnd] = useState(false);
   const intervalRef = useRef(null);
 
   useEffect(() => {
+    loadSound('typing.wav');
+    loadSound('correct.wav');
+    loadSound('incorrect.wav');
+    loadSound('alarm.wav');
+
     intervalRef.current = setInterval(() => {
       setTime(prev => {
         if (prev <= 1) {
           clearInterval(intervalRef.current);
+          playSound('alarm.wav');
           setShowEnd(true);
         }
         return prev - 1;
       });
     }, 1000);
+
     return () => clearInterval(intervalRef.current);
   }, []);
 
   useEffect(() => {
     const handleKeyDown = (e) => {
-      if (time <= 0) return;
+      if (time <= 0 || showEnd) return;
 
       const currentWord = words[currentIndex].word;
       const nextChar = currentWord[typed.length];
+
       if (e.key === nextChar) {
+        playSound('typing.wav');
+
         const newTyped = typed + e.key;
         setTyped(newTyped);
+
         if (newTyped === currentWord) {
-          setScore(score + 1);
+          playSound('correct.wav');
+          setScore(prev => prev + 1);
           setTimeout(() => {
             setTyped('');
             setCurrentIndex((prev) => (prev + 1) % words.length);
           }, 300);
         }
+      } else {
+        playSound('incorrect.wav');
       }
     };
+
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [typed, currentIndex, time]);
+  }, [typed, currentIndex, time, showEnd]);
 
   const currentWord = words[currentIndex]?.word || '';
   const currentImage = words[currentIndex]?.image || '';
@@ -135,22 +151,28 @@ export default function TypingGame() {
           </motion.span>
         ))}
       </div>
-
-      <AnimatePresence>
-        {showEnd && (
-          <motion.div
-            className="end-screen"
-            initial={{ opacity: 0, scale: 0.5 }}
-            animate={{ opacity: 1, scale: 1 }}
-            exit={{ opacity: 0, scale: 0.5 }}
-            transition={{ duration: 0.5 }}
-          >
-            <h2>⏰ Tiempo terminado</h2>
-            <h3>Tu puntaje fue: {score}</h3>
-            <button onClick={() => navigate('/')}>Volver al menú</button>
-          </motion.div>
-        )}
-      </AnimatePresence>
+<AnimatePresence>
+  {showEnd && (
+    <motion.div
+      className="typing-end-wrapper"
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+    >
+      <motion.div
+        className="typing-end-popup"
+        initial={{ scale: 0.8, opacity: 0 }}
+        animate={{ scale: 1, opacity: 1 }}
+        exit={{ scale: 0.8, opacity: 0 }}
+        transition={{ duration: 0.4 }}
+      >
+        <h2>⏰ Tiempo terminado</h2>
+        <h3>Tu puntaje fue: {score}</h3>
+        <button onClick={() => navigate('/')}>Volver al menú</button>
+      </motion.div>
+    </motion.div>
+  )}
+</AnimatePresence>
     </div>
   );
 }

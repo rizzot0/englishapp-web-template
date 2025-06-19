@@ -1,1 +1,70 @@
-body { font-family: sans-serif; margin: 0; padding: 0; background: #FDFCDC; }
+/* Global Reset y Base */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: 'Comic Sans MS', cursive, sans-serif;
+  background-color: #FDFCDC;
+  color: #333;
+  line-height: 1.5;
+  min-height: 100vh;
+}
+
+/* Imágenes Responsivas */
+img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+}
+
+/* Tipografía Escalable */
+h1, h2, h3, h4, h5, h6 {
+  font-weight: bold;
+  text-align: center;
+  color: #0081A7;
+  margin-bottom: 1rem;
+  font-size: clamp(1.5rem, 3vw, 2.5rem);
+}
+
+/* Botones Globales */
+button {
+  font-family: inherit;
+  padding: 0.6rem 1.2rem;
+  font-size: clamp(1rem, 2vw, 1.1rem);
+  border-radius: 20px;
+  border: none;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 3px 6px rgba(0,0,0,0.15);
+}
+
+button:hover {
+  transform: scale(1.05);
+}
+
+/* Container base */
+.container {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 1rem;
+}   
+
+.question-container {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100px;
+  margin-bottom: 2rem;
+}
+
+.math-question {
+  font-size: clamp(2rem, 6vw, 3rem);
+  color: #0081A7;
+  text-align: center;
+  margin: 0;
+}

@@ -2,7 +2,7 @@
   background-color: #FDFCDC;
   font-family: 'Comic Sans MS', cursive, sans-serif;
   text-align: center;
-  padding: 2rem;
+  padding: 2rem 1rem;
   min-height: 100vh;
   display: flex;
   flex-direction: column;
@@ -15,10 +15,11 @@
 .typing-game h3 {
   color: #0081A7;
   margin-bottom: 1rem;
+  font-size: clamp(1.2rem, 3vw, 1.6rem);
 }
 
 .image-container img {
-  width: 200px;
+  width: min(60vw, 200px);
   height: auto;
   margin: 1rem 0;
   border: 3px solid #00AFB9;
@@ -28,7 +29,7 @@
 }
 
 .typing-area {
-  font-size: 2rem;
+  font-size: clamp(1.6rem, 5vw, 2rem);
   margin: 1.5rem 0;
   letter-spacing: 0.3rem;
   display: flex;
@@ -53,7 +54,7 @@ button {
   padding: 0.6rem 1.5rem;
   margin-top: 1rem;
   border-radius: 25px;
-  font-size: 1.1rem;
+  font-size: clamp(1rem, 3vw, 1.2rem);
   cursor: pointer;
   box-shadow: 0 3px 6px rgba(0, 0, 0, 0.15);
   transition: all 0.3s ease;
@@ -64,28 +65,74 @@ button:hover {
   color: black;
 }
 
-.end-screen {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  background-color: #fff;
-  border: 4px solid #00AFB9;
-  border-radius: 20px;
-  padding: 2rem;
-  z-index: 10;
-  text-align: center;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.25);
-}
 
 .end-screen h2 {
   color: #F07167;
-  font-size: 2rem;
+  font-size: clamp(1.6rem, 4vw, 2rem);
   margin-bottom: 1rem;
 }
 
 .end-screen h3 {
   color: #0081A7;
-  font-size: 1.5rem;
+  font-size: clamp(1.2rem, 3vw, 1.5rem);
   margin-bottom: 1.5rem;
+}
+
+/* Cubre toda la pantalla con fondo oscuro */
+.overlay {
+  position: fixed;
+  inset: 0;
+  background-color: rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(3px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  padding: 1rem; /* Soporta pantallas pequeñas */
+}
+
+/* Contenedor del popup */
+.end-screen {
+  background-color: #fff;
+  border: 4px solid #00AFB9;
+  border-radius: 20px;
+  padding: 2rem 1rem;
+  width: 100%;
+  max-width: 400px;
+  max-height: 90vh;
+  overflow-y: auto;
+  text-align: center;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.25);
+  z-index: 1001;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.typing-end-wrapper {
+  position: fixed;
+  inset: 0;
+  background-color: rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(3px);
+  z-index: 999;
+  display: grid;
+  place-items: center;
+  padding: 1rem;
+}
+
+.typing-end-popup {
+  background-color: #fff;
+  border: 4px solid #00AFB9;
+  border-radius: 20px;
+  padding: 2rem 1rem;
+  width: 100%;
+  max-width: 400px;
+  max-height: 90vh;
+  overflow-y: auto;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.25);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
 }

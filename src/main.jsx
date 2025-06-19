@@ -13,11 +13,14 @@ import MathGame from './games/MathGame/MathGame.jsx';
 import SortingThemeSelector from './pages/SortingThemeSelector.jsx';
 import SortingGame from './games/SortingGame/SortingGame.jsx';
 import Instructions from './pages/Instructions.jsx';
-
-
+import BackgroundAudio from './components/BackgroundAudio.jsx';
+import MusicToggle from './components/MusicToggle.jsx';
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
+    <BackgroundAudio />
+    <MusicToggle />
+
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<Home />} />

@@ -51,7 +51,6 @@ export default function Home() {
         animate={{ opacity: 1 }}
         transition={{ delay: 1, duration: 0.6 }}
       >
-        <button className="music-btn">🔊 Música ON</button>
         <Link to="/instructions">
           <button className="instructions-btn">📄 Instructions</button>
         </Link>
