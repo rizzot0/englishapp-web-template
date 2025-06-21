@@ -1,5 +1,5 @@
 .home-menu {
-  background-color: #FDFCDC;
+  background: transparent;
   text-align: center;
   padding: 2rem;
   font-family: 'Comic Sans MS', cursive, sans-serif;
@@ -7,88 +7,244 @@
   display: flex;
   flex-direction: column;
   justify-content: center;
+  position: relative;
 }
 
 .home-menu h1 {
-  font-size: clamp(2rem, 6vw, 3rem);
-  color: #0081A7;
+  font-size: clamp(2.5rem, 8vw, 4rem);
+  background: linear-gradient(135deg, #0081A7, #00AFB9, #F07167);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
   margin-bottom: 0.5rem;
+  text-shadow: none;
+  position: relative;
+  z-index: 2;
+}
+
+.home-menu h1::before {
+  content: '🌟';
+  position: absolute;
+  left: -40px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 0.6em;
+  animation: sparkle 2s ease-in-out infinite;
+}
+
+.home-menu h1::after {
+  content: '🌟';
+  position: absolute;
+  right: -40px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 0.6em;
+  animation: sparkle 2s ease-in-out infinite 1s;
+}
+
+@keyframes sparkle {
+  0%, 100% { transform: translateY(-50%) scale(1) rotate(0deg); }
+  50% { transform: translateY(-50%) scale(1.2) rotate(180deg); }
 }
 
 .home-menu h2 {
-  font-size: clamp(1.2rem, 4vw, 1.8rem);
+  font-size: clamp(1.4rem, 5vw, 2.2rem);
   color: #00AFB9;
   margin-bottom: 2rem;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+  position: relative;
 }
 
 .game-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
-  gap: 1.5rem;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 2rem;
   justify-content: center;
-  max-width: 700px;
+  max-width: 800px;
   width: 100%;
   margin: 0 auto 2rem;
   padding: 0 1rem;
 }
 
 .game-card {
-  background-color: #FED9B7;
-  border-radius: 20px;
-  padding: 1rem;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-  transition: transform 0.3s ease;
+  background: rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(15px);
+  border: 2px solid rgba(255, 255, 255, 0.2);
+  border-radius: 25px;
+  padding: 1.5rem;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
   display: flex;
   flex-direction: column;
   align-items: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.game-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+  transition: left 0.6s;
+}
+
+.game-card:hover::before {
+  left: 100%;
 }
 
 .game-card:hover {
-  transform: scale(1.05);
+  transform: translateY(-10px) scale(1.05);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+  border-color: rgba(255, 255, 255, 0.4);
 }
 
 .game-card img {
-  width: 90px;
-  height: 90px;
-  margin-bottom: 1rem;
+  width: 100px;
+  height: 100px;
+  margin-bottom: 1.5rem;
+  filter: drop-shadow(0 8px 16px rgba(0, 0, 0, 0.2));
+  transition: transform 0.3s ease;
+}
+
+.game-card:hover img {
+  transform: scale(1.1) rotate(5deg);
 }
 
 .game-card button {
-  background-color: #F07167;
+  background: linear-gradient(135deg, #F07167 0%, #FED9B7 100%);
   color: white;
   border: none;
-  padding: 0.5rem 1.2rem;
-  border-radius: 15px;
-  font-size: 1rem;
+  padding: 0.8rem 1.5rem;
+  border-radius: 20px;
+  font-size: 1.1rem;
   cursor: pointer;
   font-family: inherit;
+  font-weight: bold;
+  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2);
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.game-card button::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+  transition: left 0.5s;
+}
+
+.game-card button:hover::before {
+  left: 100%;
+}
+
+.game-card button:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
 }
 
 .menu-buttons {
   display: flex;
   flex-direction: row;
   justify-content: center;
-  gap: 1rem;
+  gap: 1.5rem;
   flex-wrap: wrap;
   margin-top: 2rem;
 }
 
 .music-btn,
 .instructions-btn {
-  background-color: #00AFB9;
+  background: linear-gradient(135deg, #00AFB9 0%, #0081A7 100%);
   color: white;
   border: none;
-  padding: 0.6rem 1.4rem;
-  border-radius: 25px;
-  font-size: 1rem;
+  padding: 0.8rem 1.8rem;
+  border-radius: 30px;
+  font-size: 1.1rem;
   font-weight: bold;
   cursor: pointer;
   font-family: inherit;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
-  transition: transform 0.2s ease;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  overflow: hidden;
+}
+
+.music-btn::before,
+.instructions-btn::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+  transition: left 0.5s;
+}
+
+.music-btn:hover::before,
+.instructions-btn:hover::before {
+  left: 100%;
 }
 
 .music-btn:hover,
 .instructions-btn:hover {
-  transform: scale(1.05);
+  transform: translateY(-5px) scale(1.05);
+  box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3);
+}
+
+/* Elementos decorativos */
+.decorative-elements {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.decorative-element {
+  position: absolute;
+  font-size: 2rem;
+  opacity: 0.1;
+  animation: float-decorative 6s ease-in-out infinite;
+}
+
+.decorative-element:nth-child(1) { top: 10%; left: 10%; animation-delay: 0s; }
+.decorative-element:nth-child(2) { top: 20%; right: 15%; animation-delay: 2s; }
+.decorative-element:nth-child(3) { bottom: 30%; left: 5%; animation-delay: 4s; }
+.decorative-element:nth-child(4) { bottom: 20%; right: 10%; animation-delay: 1s; }
+
+@keyframes float-decorative {
+  0%, 100% { transform: translateY(0px) rotate(0deg); }
+  50% { transform: translateY(-20px) rotate(180deg); }
+}
+
+/* Responsive improvements */
+@media (max-width: 768px) {
+  .game-grid {
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    gap: 1.5rem;
+  }
+  
+  .game-card {
+    padding: 1rem;
+  }
+  
+  .game-card img {
+    width: 80px;
+    height: 80px;
+  }
+  
+  .home-menu h1::before,
+  .home-menu h1::after {
+    display: none;
+  }
 }

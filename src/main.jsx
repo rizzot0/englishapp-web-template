@@ -15,11 +15,13 @@ import SortingGame from './games/SortingGame/SortingGame.jsx';
 import Instructions from './pages/Instructions.jsx';
 import BackgroundAudio from './components/BackgroundAudio.jsx';
 import MusicToggle from './components/MusicToggle.jsx';
+import FloatingParticles from './components/FloatingParticles.jsx';
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
     <BackgroundAudio />
     <MusicToggle />
+    <FloatingParticles />
 
     <BrowserRouter>
       <Routes>

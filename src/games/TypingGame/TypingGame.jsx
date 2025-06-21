@@ -1,5 +1,5 @@
 // src/games/TypingGame/TypingGame.jsx
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useState, useRef, useCallback } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import './TypingGame.css';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -50,19 +50,27 @@ export default function TypingGame() {
   const params = new URLSearchParams(location.search);
   const selectedTheme = params.get('theme') || 'fruits';
 
-  const words = wordSets[selectedTheme] || [];
+  const [words, setWords] = useState([]);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [typed, setTyped] = useState('');
   const [score, setScore] = useState(0);
   const [time, setTime] = useState(60); 
   const [showEnd, setShowEnd] = useState(false);
+  const [isWrong, setIsWrong] = useState(false);
+  const [wordCompleted, setWordCompleted] = useState(false);
   const intervalRef = useRef(null);
+
+  useEffect(() => {
+    // Barajar las palabras al inicio
+    setWords([...wordSets[selectedTheme]].sort(() => Math.random() - 0.5));
+  }, [selectedTheme]);
 
   useEffect(() => {
     loadSound('typing.wav');
     loadSound('correct.wav');
     loadSound('incorrect.wav');
     loadSound('alarm.wav');
+    loadSound('win.wav');
 
     intervalRef.current = setInterval(() => {
       setTime(prev => {
@@ -70,6 +78,7 @@ export default function TypingGame() {
           clearInterval(intervalRef.current);
           playSound('alarm.wav');
           setShowEnd(true);
+          return 0;
         }
         return prev - 1;
       });
@@ -77,102 +86,131 @@ export default function TypingGame() {
 
     return () => clearInterval(intervalRef.current);
   }, []);
-
-  useEffect(() => {
-    const handleKeyDown = (e) => {
-      if (time <= 0 || showEnd) return;
-
-      const currentWord = words[currentIndex].word;
+  
+  const handleKeyDown = useCallback((e) => {
+    if (time <= 0 || showEnd || wordCompleted) return;
+  
+    const currentWord = words[currentIndex]?.word;
+    if (!currentWord) return;
+  
+    const { key } = e;
+  
+    // Solo procesar letras del alfabeto
+    if (key.length === 1 && key.match(/[a-z]/i)) {
       const nextChar = currentWord[typed.length];
-
-      if (e.key === nextChar) {
+      
+      if (key.toLowerCase() === nextChar) {
         playSound('typing.wav');
-
-        const newTyped = typed + e.key;
+        const newTyped = typed + key.toLowerCase();
         setTyped(newTyped);
-
+  
         if (newTyped === currentWord) {
-          playSound('correct.wav');
+          playSound('win.wav');
           setScore(prev => prev + 1);
+          setWordCompleted(true);
+          
           setTimeout(() => {
             setTyped('');
-            setCurrentIndex((prev) => (prev + 1) % words.length);
-          }, 300);
+            setCurrentIndex(prev => (prev + 1) % words.length);
+            setWordCompleted(false);
+          }, 800);
         }
       } else {
         playSound('incorrect.wav');
+        setIsWrong(true);
+        setTimeout(() => setIsWrong(false), 300);
       }
-    };
+    }
+  }, [typed, currentIndex, time, showEnd, wordCompleted, words]);
 
+  useEffect(() => {
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [typed, currentIndex, time, showEnd]);
+  }, [handleKeyDown]);
 
   const currentWord = words[currentIndex]?.word || '';
   const currentImage = words[currentIndex]?.image || '';
 
   return (
     <div className="typing-game">
-      <motion.h2
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ duration: 0.5 }}
-      >
-        Tiempo: {time}
-      </motion.h2>
+      <div className="game-stats">
+        <motion.h2>
+          Tiempo: <AnimatePresence mode="popLayout"><motion.span key={time} initial={{ scale: 1.5, opacity: 0}} animate={{ scale: 1, opacity: 1}} exit={{ scale: 0.5, opacity: 0}} transition={{ duration: 0.3 }}>{time}</motion.span></AnimatePresence>
+        </motion.h2>
+        <div className="timer-bar-container">
+          <motion.div 
+            className="timer-bar"
+            initial={{ width: "100%" }}
+            animate={{ width: `${(time / 60) * 100}%` }}
+            transition={{ duration: 1, ease: "linear" }}
+          />
+        </div>
+        <motion.h3>
+          Puntaje: <AnimatePresence mode="popLayout"><motion.span key={score} initial={{ scale: 1.5, opacity: 0}} animate={{ scale: 1, opacity: 1}} exit={{ scale: 0.5, opacity: 0}} transition={{ duration: 0.3, type: "spring" }}>{score}</motion.span></AnimatePresence>
+        </motion.h3>
+      </div>
 
-      <motion.h3
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: 0.2, duration: 0.5 }}
-      >
-        Puntaje: {score}
-      </motion.h3>
+      <AnimatePresence mode="wait">
+        <motion.div
+          key={currentIndex}
+          className="image-container"
+          initial={{ scale: 0.5, opacity: 0, y: 50 }}
+          animate={{ scale: 1, opacity: 1, y: 0 }}
+          exit={{ scale: 0.5, opacity: 0, y: -50 }}
+          transition={{ duration: 0.4, type: "spring", stiffness: 120 }}
+        >
+          <img src={`/assets/images/${currentImage}`} alt="current" />
+        </motion.div>
+      </AnimatePresence>
 
-      <motion.div
-        className="image-container"
-        initial={{ scale: 0.8, opacity: 0 }}
-        animate={{ scale: 1, opacity: 1 }}
-        transition={{ delay: 0.4 }}
+      <motion.div 
+        className="typing-area"
+        animate={{ x: isWrong ? [-10, 10, -5, 5, 0] : 0 }}
+        transition={{ duration: 0.3 }}
       >
-        <img src={`/assets/images/${currentImage}`} alt="current" />
+        <AnimatePresence>
+          {currentWord.split('').map((char, idx) => {
+            const isTyped = idx < typed.length;
+            const isCorrect = isTyped && typed[idx] === char;
+            
+            return (
+              <motion.span
+                key={`${currentIndex}-${idx}`}
+                className={`letter ${isTyped ? 'typed' : 'pending'} ${wordCompleted ? 'completed' : ''}`}
+                initial={{ opacity: 0, y: -20 }}
+                animate={{ opacity: 1, y: 0, scale: isTyped ? [1, 1.2, 1] : 1 }}
+                exit={{ opacity: 0, y: 20 }}
+                transition={{ delay: idx * 0.05, duration: 0.3 }}
+              >
+                {char}
+              </motion.span>
+            );
+          })}
+        </AnimatePresence>
       </motion.div>
 
-      <div className="typing-area">
-        {currentWord.split('').map((char, idx) => (
-          <motion.span
-            key={idx}
-            className={idx < typed.length ? 'typed' : 'pending'}
+      <AnimatePresence>
+        {showEnd && (
+          <motion.div
+            className="typing-end-wrapper"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            transition={{ delay: idx * 0.05 }}
+            exit={{ opacity: 0 }}
           >
-            {idx < typed.length ? typed[idx] : '_'}
-          </motion.span>
-        ))}
-      </div>
-<AnimatePresence>
-  {showEnd && (
-    <motion.div
-      className="typing-end-wrapper"
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      exit={{ opacity: 0 }}
-    >
-      <motion.div
-        className="typing-end-popup"
-        initial={{ scale: 0.8, opacity: 0 }}
-        animate={{ scale: 1, opacity: 1 }}
-        exit={{ scale: 0.8, opacity: 0 }}
-        transition={{ duration: 0.4 }}
-      >
-        <h2>⏰ Tiempo terminado</h2>
-        <h3>Tu puntaje fue: {score}</h3>
-        <button onClick={() => navigate('/')}>Volver al menú</button>
-      </motion.div>
-    </motion.div>
-  )}
-</AnimatePresence>
+            <motion.div
+              className="typing-end-popup"
+              initial={{ scale: 0.7, opacity: 0, y: 50 }}
+              animate={{ scale: 1, opacity: 1, y: 0 }}
+              exit={{ scale: 0.7, opacity: 0, y: 50 }}
+              transition={{ duration: 0.4, type: 'spring' }}
+            >
+              <h2>⏰ ¡Tiempo terminado!</h2>
+              <h3>Tu puntaje final fue: {score}</h3>
+              <button onClick={() => navigate('/')}>🏠 Volver al Menú</button>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 }

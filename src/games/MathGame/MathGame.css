@@ -1,137 +1,178 @@
 .math-game {
-  background-color: #FDFCDC;
+  background: transparent;
   font-family: 'Comic Sans MS', cursive, sans-serif;
-  text-align: center;
-  padding: 2rem 1rem;
   min-height: 100vh;
+  padding: 1rem;
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
-  position: relative;
+  justify-content: center; /* Centra el contenido verticalmente */
+  gap: 1.5rem; /* Espacio entre elementos principales */
 }
 
-.math-game h2,
-.math-game h3,
-.math-game h1 {
-  color: #0081A7;
-  margin: 0.5rem 0;
-  font-size: clamp(1.3rem, 4vw, 2rem);
-}
-
-.math-game .body-img {
-  width: 80%;
-  max-width: 220px;
-  height: auto;
-  margin: 1rem 0;
-  border-radius: 1rem;
-  background-color: white;
-  padding: 0.5rem;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-}
-
-.options {
-  margin-top: 2rem;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 1rem;
-  flex-wrap: wrap;
-  max-width: 700px;
+/* Contenedor de estadísticas (tiempo y puntaje) */
+.game-stats-math {
   width: 100%;
-}
-
-
-
-.options button {
-  background-color: #00AFB9;
-  color: white;
-  border: none;
-  padding: 0.7rem 1.6rem;
-  border-radius: 30px;
-  font-size: 1.1rem;
-  font-weight: bold;
-  cursor: pointer;
-  min-width: 120px;
-  max-width: 200px;
-  transition: background-color 0.2s ease, transform 0.2s ease;
-  flex: 0 0 auto; /* <--- Muy importante */
-}
-
-
-.options button:hover {
-  background-color: #0081A7;
-  transform: scale(1.05);
-}
-
-.end-screen {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 100vh;
-  background-color: #ffffffee;
+  max-width: 600px;
   display: flex;
-  flex-direction: column;
-  justify-content: center;
+  justify-content: space-between;
   align-items: center;
-  z-index: 9999;
-  backdrop-filter: blur(5px);
-  animation: popIn 0.5s ease-out;
-  pointer-events: all;
-  padding: 2rem 1.5rem;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
-  border-radius: 1rem;
-  max-width: 340px;
-  margin: auto;
-  left: 50%;
-  top: 50%;
-  transform: translate(-50%, -50%);
-}
-
-
-@keyframes popIn {
-  0% {
-    transform: scale(0.5);
-    opacity: 0;
-  }
-  100% {
-    transform: scale(1);
-    opacity: 1;
-  }
-}
-
-.end-screen h2 {
-  font-size: clamp(1.6rem, 5vw, 2.2rem);
-  color: #F07167;
+  padding: 0.5rem 1rem;
+  background-color: rgba(255, 255, 255, 0.1);
+  border-radius: 20px;
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
   margin-bottom: 1rem;
-  text-align: center;
 }
 
-.end-screen h3 {
+.game-stats-math h2, .game-stats-math h3 {
   color: #0081A7;
   font-size: clamp(1.2rem, 4vw, 1.6rem);
-  margin-bottom: 2rem;
-  text-align: center;
+  margin: 0;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
 }
 
-.end-screen button {
-  background-color: #00AFB9;
+.game-stats-math span {
+  color: #F07167;
+  font-weight: bold;
+}
+
+/* Barra de tiempo */
+.timer-bar-container-math {
+  flex-grow: 1;
+  height: 20px;
+  background-color: rgba(0, 0, 0, 0.1);
+  border-radius: 10px;
+  margin: 0 1rem;
+  overflow: hidden;
+}
+
+.timer-bar-math {
+  height: 100%;
+  background: linear-gradient(90deg, #F07167, #FED9B7);
+  border-radius: 10px;
+}
+
+/* Contenedor de la pregunta (imagen o texto) */
+.question-container-math {
+  width: 100%;
+  max-width: 600px; /* Ancho máximo para el contenedor */
+  min-height: 250px; /* Altura mínima para evitar saltos */
+  display: grid;
+  place-items: center;
+}
+
+.body-img-math {
+  width: 100%;
+  max-width: 300px; /* Controla el tamaño máximo de la imagen */
+  height: auto;
+  object-fit: contain;
+  border-radius: 20px;
+  background-color: rgba(255, 255, 255, 0.5);
+  padding: 1rem;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+}
+
+.math-question {
+  color: #0081A7;
+  font-size: clamp(2.5rem, 8vw, 4rem);
+}
+
+/* Contenedor de opciones */
+.options-math {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+  width: 100%;
+  max-width: 600px;
+}
+
+.option-button-math {
+  background: linear-gradient(135deg, #00AFB9, #0081A7);
   color: white;
   border: none;
-  padding: 0.7rem 2rem;
-  margin: 0.5rem;
+  padding: 0.8rem 1.8rem;
   border-radius: 25px;
   font-size: clamp(1rem, 3.5vw, 1.2rem);
   font-weight: bold;
-  cursor: pointer;
-  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.15);
-  transition: background-color 0.3s ease, transform 0.2s ease;
 }
 
-.end-screen button:hover {
-  background-color: #F07167;
-  transform: scale(1.05);
+/* --- ESTILOS DE PANTALLA FINAL --- */
+
+.math-game-end-wrapper {
+  position: fixed;
+  inset: 0;
+  background-color: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(8px);
+  z-index: 999;
+  display: grid;
+  place-items: center;
+  padding: 1rem;
+}
+
+.math-game-end-popup {
+  background: linear-gradient(135deg, rgba(253, 252, 220, 0.95), rgba(254, 217, 183, 0.95));
+  border: 3px solid rgba(255, 255, 255, 0.4);
+  border-radius: 30px;
+  padding: 2rem;
+  width: 100%;
+  max-width: 450px;
+  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.25);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+.math-game-end-popup h2 {
+  font-size: clamp(1.8rem, 5vw, 2.5rem);
+  color: #F07167;
+}
+
+.math-game-end-popup h3 {
+  font-size: clamp(1.2rem, 4vw, 1.6rem);
+  color: #0081A7;
+  margin: 1rem 0 2rem 0;
+}
+
+.end-screen-buttons {
+  display: flex;
+  gap: 1rem;
+}
+.end-screen-buttons button {
+  background: linear-gradient(135deg, #00AFB9, #0081A7);
+  color: white;
+  border: none;
+  padding: 0.8rem 1.8rem;
+  border-radius: 25px;
+  font-size: clamp(1rem, 3.5vw, 1.2rem);
+  font-weight: bold;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+}
+
+.end-screen-buttons button:hover {
+    transform: scale(1.05);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
+}
+
+/* Feedback de botones */
+.option-button-math.correct {
+  animation: pulse-correct 0.8s ease;
+  background: #28a745;
+}
+.option-button-math.incorrect {
+  animation: shake 0.5s ease-in-out;
+  background: #dc3545;
+}
+.option-button-math.disabled {
+  opacity: 0.6;
+  background: #6c757d;
+  cursor: not-allowed;
 }
 
 @media (min-width: 768px) {

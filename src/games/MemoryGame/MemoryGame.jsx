@@ -43,6 +43,7 @@ const MemoryGame = () => {
   const [matched, setMatched] = useState([]);
   const [score, setScore] = useState(0);
   const [showWin, setShowWin] = useState(false);
+  const [isChecking, setIsChecking] = useState(false);
 
   const totalPairs = (themes[selectedTheme] || []).length;
 
@@ -66,7 +67,9 @@ const MemoryGame = () => {
   }, [selectedTheme]);
 
   const handleClick = (index) => {
-    if (flipped.length === 2 || flipped.includes(index) || matched.includes(cards[index].id)) return;
+    if (isChecking || flipped.length === 2 || flipped.includes(index) || matched.includes(cards[index].id)) {
+      return;
+    }
 
     playSound('cardFlip.wav');
 
@@ -74,6 +77,7 @@ const MemoryGame = () => {
     setFlipped(newFlipped);
 
     if (newFlipped.length === 2) {
+      setIsChecking(true);
       const [i1, i2] = newFlipped;
       const c1 = cards[i1];
       const c2 = cards[i2];
@@ -89,14 +93,18 @@ const MemoryGame = () => {
               setShowWin(true);
             }, 800);
           }
-
+          
+          setFlipped([]);
+          setIsChecking(false);
           return updated;
         });
-
         setScore(prev => prev + 1);
+      } else {
+        setTimeout(() => {
+          setFlipped([]);
+          setIsChecking(false);
+        }, 1200);
       }
-
-      setTimeout(() => setFlipped([]), 1000);
     }
   };
 
@@ -105,38 +113,44 @@ const MemoryGame = () => {
       <h2>Puntaje: {score}</h2>
       <div className="grid">
         {cards.map((card, index) => {
-          const isFlipped = flipped.includes(index) || matched.includes(card.id);
+          const isFlipping = flipped.includes(index);
+          const isMatched = matched.includes(card.id);
+          const isFlipped = isFlipping || isMatched;
+
           return (
             <div
               key={card.uid}
-              className={`card ${isFlipped ? 'flipped' : ''}`}
+              className="card"
               onClick={() => handleClick(index)}
             >
-              <div className="card-inner">
-                <div className="card-front"></div>
-                <div className="card-back">
+              <motion.div
+                className="card-inner"
+                animate={{ rotateY: isFlipped ? 180 : 0 }}
+                transition={{ duration: 0.5, ease: "easeInOut" }}
+              >
+                <div className="card-face card-front">
+                  <span>❓</span>
+                </div>
+
+                <div className={`card-face card-back ${isMatched ? 'matched' : ''} ${isFlipping && !isMatched ? 'flipping' : ''}`}>
                   {card.type === 'image' ? (
                     <img src={`/assets/images/${card.value}`} alt={card.id} />
                   ) : (
-                    <span style={{ fontSize: '1.1rem', fontWeight: 'bold', color: '#0081A7' }}>
-                      {card.value}
-                    </span>
+                    <span>{card.value}</span>
                   )}
                 </div>
-              </div>
+              </motion.div>
             </div>
           );
         })}
       </div>
 
-      {/* 🔁 Solo mostrar reiniciar si aún no se gana */}
       {!showWin && (
         <button className="play-btn" onClick={() => window.location.reload()}>
           Reiniciar juego
         </button>
       )}
 
-      {/* 🎉 Animación de victoria */}
       <AnimatePresence>
         {showWin && (
           <motion.div
@@ -144,11 +158,13 @@ const MemoryGame = () => {
             initial={{ scale: 0.8, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
             exit={{ scale: 0.8, opacity: 0 }}
-            transition={{ duration: 0.5 }}
+            transition={{ duration: 0.5, type: 'spring' }}
           >
-            <h2>🎉 ¡Ganaste!</h2>
-            <p>Has encontrado todos los pares</p>
-            <button onClick={() => navigate('/')}>Volver al menú</button>
+            <div>
+              <h2>🎉 ¡Ganaste!</h2>
+              <p>Has encontrado todos los pares</p>
+              <button onClick={() => navigate('/')}>Volver al menú</button>
+            </div>
           </motion.div>
         )}
       </AnimatePresence>

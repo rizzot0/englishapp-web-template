@@ -1,16 +1,13 @@
 // src/games/SortingGame/SortingGame.jsx
 import React, { useState, useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion, AnimatePresence, Reorder } from 'framer-motion';
 import './SortingGame.css';
 import { loadSound, playSound } from '../../utils/soundManager';
 
 const themeItems = {
   days: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'],
-  months: [
-    'January', 'February', 'March', 'April', 'May', 'June',
-    'July', 'August', 'September', 'October', 'November', 'December'
-  ],
+  months: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
   seasons: ['Spring', 'Summer', 'Autumn', 'Winter']
 };
 
@@ -21,14 +18,15 @@ export default function SortingGame() {
   const theme = params.get('theme') || 'days';
 
   const [items, setItems] = useState([]);
-  const [original, setOriginal] = useState([]);
-  const [isCorrect, setIsCorrect] = useState(null);
-  const [selectedIndex, setSelectedIndex] = useState(null);
+  const [originalOrder, setOriginalOrder] = useState([]);
+  const [status, setStatus] = useState(null); // 'correct', 'incorrect'
 
   useEffect(() => {
     const list = themeItems[theme];
-    setOriginal(list);
+    setOriginalOrder(list);
     setItems(shuffle(list));
+    setStatus(null);
+
     loadSound('cardFlip.wav');
     loadSound('correct.wav');
     loadSound('incorrect.wav');
@@ -37,113 +35,101 @@ export default function SortingGame() {
 
   const shuffle = (arr) => [...arr].sort(() => Math.random() - 0.5);
 
-  const isMobile = () => window.innerWidth <= 768;
-
-  const handleItemClick = (index) => {
-    if (!isMobile()) return;
-
-    if (selectedIndex === null) {
-      setSelectedIndex(index);
-    } else {
-      const newItems = [...items];
-      const temp = newItems[selectedIndex];
-      newItems[selectedIndex] = newItems[index];
-      newItems[index] = temp;
-      setItems(newItems);
-      setSelectedIndex(null);
-      playSound('cardFlip.wav'); // sonido intercambio en móvil
-    }
-  };
-
-  const handleDragStart = (e, index) => {
-    if (isMobile()) return;
-    e.dataTransfer.setData('text/plain', index);
-  };
-
-  const handleDrop = (e, index) => {
-    if (isMobile()) return;
-    const draggedIndex = e.dataTransfer.getData('text/plain');
-    if (draggedIndex === '') return;
-    const newItems = [...items];
-    const [draggedItem] = newItems.splice(draggedIndex, 1);
-    newItems.splice(index, 0, draggedItem);
-    setItems(newItems);
-    playSound('cardFlip.wav'); // sonido arrastrar y soltar
-  };
-
-  const handleDragOver = (e) => {
-    if (!isMobile()) e.preventDefault();
-  };
-
   const checkOrder = () => {
-    const isRight = items.join(',') === original.join(',');
-    setIsCorrect(isRight);
-    playSound(isRight ? 'correct.wav' : 'incorrect.wav');
-    if (isRight) {
+    const isCorrect = items.join(',') === originalOrder.join(',');
+    setStatus(isCorrect ? 'correct' : 'incorrect');
+    playSound(isCorrect ? 'correct.wav' : 'incorrect.wav');
+    if (isCorrect) {
       setTimeout(() => playSound('win.wav'), 500);
+    } else {
+        // Reset status after a delay if incorrect
+        setTimeout(() => setStatus(null), 1000);
     }
   };
 
-  const reset = () => {
-    setItems(shuffle(original));
-    setIsCorrect(null);
-    setSelectedIndex(null);
+  const resetGame = () => {
+    setItems(shuffle(originalOrder));
+    setStatus(null);
   };
+
+  const getTitle = () => {
+      switch(theme) {
+          case 'days': return 'Days of the Week';
+          case 'months': return 'Months of the Year';
+          case 'seasons': return 'Seasons';
+          default: return 'Order Game';
+      }
+  }
 
   return (
-    <motion.div className="sorting-game" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.5 }}>
-      <motion.h2 initial={{ y: -20, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ duration: 0.5 }}>
-        Order Game - {theme === 'days' ? 'Days of the Week' : theme === 'months' ? 'Months of the Year' : 'Seasons'}
-      </motion.h2>
-
-      <motion.div className="items-list" layout>
-        {items.map((item, index) => (
-          <motion.div
-            key={index}
-            className={`sortable-item ${selectedIndex === index ? 'selected' : ''}`}
-            draggable={!isMobile()}
-            onClick={() => handleItemClick(index)}
-            onDragStart={(e) => handleDragStart(e, index)}
-            onDrop={(e) => handleDrop(e, index)}
-            onDragOver={handleDragOver}
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-            layout
-          >
-            {item}
-          </motion.div>
-        ))}
-      </motion.div>
-
-      <div className="buttons">
-        <motion.button whileHover={{ scale: 1.05 }} onClick={checkOrder}>✓📋 Verificar orden</motion.button>
-        <motion.button whileHover={{ scale: 1.05 }} onClick={reset}>🔄 Reiniciar</motion.button>
-      </div>
-
-<AnimatePresence>
-  {isCorrect === true && (
-    <motion.div
-      className="sorting-end-wrapper"
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      exit={{ opacity: 0 }}
+    <motion.div 
+        className="sorting-game" 
+        initial={{ opacity: 0, scale: 0.9 }} 
+        animate={{ opacity: 1, scale: 1 }} 
+        transition={{ duration: 0.5 }}
     >
-      <motion.div
-        className="sorting-end-popup"
-        initial={{ scale: 0.8, opacity: 0 }}
-        animate={{ scale: 1, opacity: 1 }}
-        exit={{ scale: 0.8, opacity: 0 }}
-        transition={{ duration: 0.4 }}
-      >
-        <h2>🎉 ¡Correcto!</h2>
-        <p>🎊 ¡Ordenaste todos los elementos correctamente!</p>
-        <button onClick={reset}>🔁 Seguir</button>
-        <button onClick={() => navigate('/')}>🏠 Volver al Menú</button>
-      </motion.div>
-    </motion.div>
-  )}
-</AnimatePresence>
+        <motion.h2 
+            initial={{ y: -30, opacity: 0 }} 
+            animate={{ y: 0, opacity: 1 }} 
+            transition={{ duration: 0.5, delay: 0.2 }}
+        >
+            Organize the {getTitle()}
+        </motion.h2>
 
+        <Reorder.Group 
+            axis="y" 
+            values={items} 
+            onReorder={setItems}
+            className={`items-list-sorting ${status ? status : ''}`}
+        >
+            {items.map((item) => (
+                <Reorder.Item 
+                    key={item} 
+                    value={item}
+                    className="sortable-item-sorting"
+                    whileDrag={{ scale: 1.05, boxShadow: "0px 10px 30px rgba(0,0,0,0.2)" }}
+                    onDragStart={() => playSound('cardFlip.wav')}
+                >
+                    <span className="drag-handle">::</span>
+                    <span>{item}</span>
+                </Reorder.Item>
+            ))}
+        </Reorder.Group>
+
+        <div className="buttons-sorting">
+            <motion.button whileHover={{ scale: 1.05 }} onClick={checkOrder}>
+                ✓ Check Order
+            </motion.button>
+            <motion.button whileHover={{ scale: 1.05 }} onClick={resetGame}>
+                🔄 Reset
+            </motion.button>
+        </div>
+
+        <AnimatePresence>
+            {status === 'correct' && (
+                <motion.div
+                    className="sorting-end-wrapper"
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    exit={{ opacity: 0 }}
+                >
+                <motion.div
+                    className="sorting-end-popup"
+                    initial={{ scale: 0.8, opacity: 0, y: 50 }}
+                    animate={{ scale: 1, opacity: 1, y: 0 }}
+                    exit={{ scale: 0.8, opacity: 0, y: 50 }}
+                    transition={{ type: 'spring' }}
+                >
+                    <h2>🎉 Well Done!</h2>
+                    <p>You sorted them all correctly!</p>
+                    <div className="end-screen-buttons">
+                        <button onClick={resetGame}>Play Again</button>
+                        <button onClick={() => navigate('/')}>Back to Menu</button>
+                    </div>
+                </motion.div>
+                </motion.div>
+            )}
+        </AnimatePresence>
     </motion.div>
   );
 }
