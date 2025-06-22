@@ -1,5 +1,6 @@
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
+import { resolve } from 'path'
 
 export default defineConfig({
   plugins: [react()],
@@ -19,6 +20,9 @@ export default defineConfig({
           if (/png|jpe?g|svg|gif|tiff|bmp|ico/i.test(ext)) {
             return `assets/images/[name]-[hash][extname]`
           }
+          if (/wav|mp3|ogg/i.test(ext)) {
+            return `assets/sounds/[name]-[hash][extname]`
+          }
           return `assets/[name]-[hash][extname]`
         }
       }
@@ -27,5 +31,6 @@ export default defineConfig({
   server: {
     port: 5173
   },
-  assetsInclude: ['**/*.wav', '**/*.mp3']
+  assetsInclude: ['**/*.wav', '**/*.mp3'],
+  publicDir: 'public'
 })
