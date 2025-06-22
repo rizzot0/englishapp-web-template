@@ -1,15 +1,19 @@
 import { useEffect } from 'react';
-import { loadSound, playSound } from '../utils/soundManager';
+import { playSound } from '../utils/soundManager';
 import { getMusicMuted } from '../utils/musicState';
 
 export default function BackgroundAudio() {
   useEffect(() => {
-    loadSound('background.wav', 0.2, true);
+    // El sonido de fondo ya se precarga en soundManager.js
 
     const handleFirstInteraction = () => {
+      // Si la música no está muteada, la reproducimos.
+      // playSound se encarga de no hacer nada si ya está sonando.
       if (!getMusicMuted()) {
         playSound('background.wav');
       }
+      
+      // Removemos los listeners después de la primera interacción
       window.removeEventListener('click', handleFirstInteraction);
       window.removeEventListener('keydown', handleFirstInteraction);
     };

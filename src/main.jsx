@@ -19,6 +19,7 @@ import BackgroundAudio from './components/BackgroundAudio.jsx';
 import MusicToggle from './components/MusicToggle.jsx';
 import ThemeToggle from './components/ThemeToggle.jsx';
 import FloatingParticles from './components/FloatingParticles.jsx';
+import VolumeControls from './components/VolumeControls.jsx';
 import SoundMatchingThemeSelector from './pages/SoundMatchingThemeSelector.jsx';
 import SoundMatchingGame from './games/SoundMatching/SoundMatchingGame.jsx';
 import IdentificationThemeSelector from './pages/IdentificationThemeSelector.jsx';
@@ -38,6 +39,7 @@ ReactDOM.createRoot(document.getElementById('root')).render(
       <BackgroundAudio />
       <MusicToggle />
       <ThemeToggle />
+      <VolumeControls />
       <FloatingParticles />
 
       <BrowserRouter>

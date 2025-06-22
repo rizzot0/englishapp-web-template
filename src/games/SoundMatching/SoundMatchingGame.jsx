@@ -4,19 +4,24 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Howl } from 'howler';
 import './SoundMatchingGame.css';
 import { loadSound, playSound } from '../../utils/soundManager';
+import { speak } from '../../utils/speechSynthesis';
 
-// En un futuro, estos datos vendrán de un archivo o API.
-// Por ahora, usamos sonidos existentes como placeholder.
-const animalData = {
+// Cambiamos el nombre para que sea más genérico
+const themeData = {
   animals: [
-    { name: 'dog', image: 'dog.png', sound: 'correct.wav' },
-    { name: 'cat', image: 'cat.png', sound: 'incorrect.wav' },
-    { name: 'lion', image: 'lion.png', sound: 'win.wav' },
-    { name: 'zebra', image: 'zebra.png', sound: 'alarm.wav' },
-    { name: 'frog', image: 'frog.png', sound: 'ding.wav' },
-    { name: 'monkey', image: 'monkey.png', sound: 'positive.wav' },
+    { name: 'dog', image: 'dog.png' },
+    { name: 'cat', image: 'cat.png' },
+    { name: 'lion', image: 'lion.png' },
+    { name: 'zebra', image: 'zebra.png' },
+    { name: 'frog', image: 'frog.png' },
+    { name: 'monkey', image: 'monkey.png' },
   ],
-  objects: [], // Para futura expansión
+  objects: [ // Nueva temática con figuras
+    { name: 'circle', image: 'circle.png' },
+    { name: 'square', image: 'square.png' },
+    { name: 'star', image: 'star.png' },
+    { name: 'triangle', image: 'triangle.png' },
+  ],
 };
 
 const GAME_DURATION = 60; // 60 segundos
@@ -34,6 +39,7 @@ export default function SoundMatchingGame() {
   const [timeLeft, setTimeLeft] = useState(GAME_DURATION);
   const [gameEnded, setGameEnded] = useState(false);
   const [questionsAnswered, setQuestionsAnswered] = useState(0);
+  const [timer, setTimer] = useState(60);
 
   const shuffle = (arr) => [...arr].sort(() => Math.random() - 0.5);
 
@@ -59,17 +65,20 @@ export default function SoundMatchingGame() {
     if (gameEnded) return;
     
     setFeedback({ show: false, correct: false, selected: null });
-    const themeData = animalData[theme];
-    if (themeData.length === 0) return;
+    const currentThemeData = themeData[theme];
+    if (currentThemeData.length === 0) return;
 
     // 1. Elegir una respuesta correcta
-    const correctAnimal = themeData[Math.floor(Math.random() * themeData.length)];
-    setQuestion(correctAnimal);
+    const correctItem = currentThemeData[Math.floor(Math.random() * currentThemeData.length)];
+    setQuestion(correctItem);
 
-    // 2. Crear opciones (1 correcta, 2 incorrectas)
-    const distractors = themeData.filter(animal => animal.name !== correctAnimal.name);
-    const shuffledDistractors = shuffle(distractors).slice(0, 2);
-    const allOptions = shuffle([correctAnimal, ...shuffledDistractors]);
+    // 2. Crear opciones (1 correcta, 2 o 3 incorrectas)
+    const distractors = currentThemeData.filter(item => item.name !== correctItem.name);
+    const numOptions = Math.min(currentThemeData.length, 4); // Máximo 4 opciones
+    const numDistractors = numOptions - 1;
+    
+    const shuffledDistractors = shuffle(distractors).slice(0, numDistractors);
+    const allOptions = shuffle([correctItem, ...shuffledDistractors]);
     setOptions(allOptions);
 
     // Precargar sonidos de feedback
@@ -82,19 +91,25 @@ export default function SoundMatchingGame() {
   }, [generateQuestion]);
   
   const playQuestionSound = () => {
-    if (question && question.sound && !gameEnded) {
+    if (!question || gameEnded) return;
+
+    // Usamos síntesis de voz para todos los temas que no tengan un 'sound' explícito
+    if (theme === 'objects' || theme === 'animals') {
+      speak(question.name);
+    } else if (question.sound) { // Mantenemos la lógica por si añadimos temas con sonidos personalizados
       const sound = new Howl({
-        src: [`/assets/sounds/${question.sound}`]
+        src: [`/assets/sounds/${question.sound}`],
+        html5: true
       });
       sound.play();
     }
   };
 
-  const handleOptionClick = (selectedAnimal) => {
+  const handleOptionClick = (selectedItem) => {
     if (feedback.show || gameEnded) return;
 
-    const isCorrect = selectedAnimal.name === question.name;
-    setFeedback({ show: true, correct: isCorrect, selected: selectedAnimal.name });
+    const isCorrect = selectedItem.name === question.name;
+    setFeedback({ show: true, correct: isCorrect, selected: selectedItem.name });
     setQuestionsAnswered(prev => prev + 1);
 
     if (isCorrect) {

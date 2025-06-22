@@ -184,6 +184,17 @@ export default function MathGame() {
                 );
             })}
         </motion.div>
+        
+        <motion.div
+            className="math-game-actions"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.4 }}
+        >
+            <button onClick={() => navigate('/')} className="menu-btn-math">
+                🏠 Back to Menu
+            </button>
+        </motion.div>
 
         <AnimatePresence>
             {showEnd && (

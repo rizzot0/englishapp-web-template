@@ -1,23 +1,30 @@
 /* Variables CSS para temas */
 :root {
   /* Colores modo claro */
-  --bg-primary: #FDFCDC;
-  --bg-secondary: #FED9B7;
-  --bg-accent: #F07167;
+  --bg-primary: #fdfcdc;
+  --bg-secondary: #fed9b7;
+  --bg-accent: #f07167;
   --text-primary: #333;
-  --text-secondary: #0081A7;
+  --text-secondary: #0081a7;
   --card-bg: rgba(255, 255, 255, 0.1);
   --card-border: rgba(255, 255, 255, 0.2);
   --shadow-light: rgba(0, 0, 0, 0.1);
   --shadow-medium: rgba(0, 0, 0, 0.2);
   --shadow-heavy: rgba(0, 0, 0, 0.3);
-  --button-gradient: linear-gradient(135deg, #F07167 0%, #FED9B7 100%);
-  --particle-color: rgba(255, 255, 255, 0.6);
+  --button-gradient: linear-gradient(135deg, #f07167 0%, #fed9b7 100%);
+  --particle-color: rgba(0, 129, 167, 0.6);
   --scrollbar-bg: rgba(255, 255, 255, 0.1);
-  --scrollbar-thumb: linear-gradient(135deg, #F07167, #00AFB9);
+  --scrollbar-thumb: linear-gradient(135deg, #f07167, #00afb9);
+  --icon-filter: invert(0%);
+  --ui-background-color: rgba(255, 255, 255, 0.8);
+  --ui-background-color-translucent: rgba(255, 255, 255, 0.6);
+  --primary-color: #f07167; /* Usada por los sliders */
+
+  /* Variables para los sliders de volumen */
+  --slider-track-color: #e0e0e0;
+  --slider-thumb-border-color: #ffffff;
 }
 
-/* Variables modo oscuro */
 .dark-mode {
   --bg-primary: #1a1a2e;
   --bg-secondary: #16213e;
@@ -33,6 +40,14 @@
   --particle-color: rgba(0, 212, 255, 0.4);
   --scrollbar-bg: rgba(255, 255, 255, 0.05);
   --scrollbar-thumb: linear-gradient(135deg, #00d4ff, #0099cc);
+  --icon-filter: invert(100%);
+  --ui-background-color: rgba(40, 40, 40, 0.8);
+  --ui-background-color-translucent: rgba(40, 40, 40, 0.6);
+  --primary-color: #00d4ff; /* Usada por los sliders */
+
+  /* Variables para los sliders de volumen en modo oscuro */
+  --slider-track-color: #555;
+  --slider-thumb-border-color: #1a1a2e;
 }
 
 /* Global Reset y Base */
@@ -40,6 +55,7 @@
   box-sizing: border-box;
   margin: 0;
   padding: 0;
+  transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
 }
 
 body {
@@ -232,9 +248,4 @@ button:active {
 
 ::-webkit-scrollbar-thumb:hover {
   background: linear-gradient(135deg, #00AFB9, #F07167);
-}
-
-/* Transiciones suaves para cambios de tema */
-* {
-  transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
 }

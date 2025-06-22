@@ -264,4 +264,35 @@
   color: white;
 }
 
+.math-game-end-popup button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 15px rgba(0,0,0,0.2);
+}
+
+.math-game-actions {
+  margin-top: 2rem;
+  display: flex;
+  justify-content: center;
+}
+
+.menu-btn-math {
+  background: var(--card-bg);
+  color: var(--text-secondary);
+  border: 2px solid var(--card-border);
+  padding: 0.8rem 1.5rem;
+  border-radius: 20px;
+  font-weight: bold;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 10px var(--shadow-light);
+}
+
+.menu-btn-math:hover {
+  background: var(--card-bg);
+  border-color: var(--text-secondary);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 15px var(--shadow-medium);
+}
+
 

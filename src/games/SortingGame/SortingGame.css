@@ -81,8 +81,10 @@
 
 .buttons-sorting {
   display: flex;
+  justify-content: center;
   gap: 1rem;
-  margin-top: 1rem;
+  margin-top: 1.5rem;
+  flex-wrap: wrap;
 }
 
 .buttons-sorting button {

@@ -55,6 +55,9 @@ const MemoryGame = () => {
 
   const totalPairs = (themes[selectedTheme] || []).length;
 
+  // Determinar la clase de la cuadrícula según el número de cartas
+  const gridLayoutClass = totalPairs <= 4 ? 'grid-8-cards' : 'grid-16-cards';
+
   const prepareGame = useCallback(() => {
     loadSound('cardFlip.wav');
     loadSound('correct.wav');
@@ -169,7 +172,7 @@ const MemoryGame = () => {
         )}
       </div>
       
-      <div className="grid">
+      <div className={`grid ${gridLayoutClass}`}>
         {cards.map((card, index) => {
           const isFlipping = flipped.includes(index);
           const isMatched = matched.includes(card.id);

@@ -1,0 +1,67 @@
+.volume-controls-container {
+  position: fixed;
+  bottom: 20px;
+  left: 20px;
+  background-color: var(--ui-background-color-translucent);
+  color: var(--text-color);
+  padding: 15px;
+  border-radius: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  z-index: 1001; /* Asegura que esté por encima de otros elementos */
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  border: 1px solid var(--border-color);
+  transition: background-color 0.3s, color 0.3s;
+}
+
+.volume-slider {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.volume-slider label {
+  font-size: 14px;
+  font-weight: 600;
+  width: 40px; /* Ancho fijo para alinear los sliders */
+  text-align: center;
+}
+
+/* Estilo consistente para los sliders en todos los navegadores */
+.volume-slider input[type="range"] {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 120px;
+  height: 8px;
+  background: var(--slider-track-color);
+  border-radius: 5px;
+  outline: none;
+  opacity: 0.8;
+  transition: opacity 0.2s;
+}
+
+.volume-slider input[type="range"]:hover {
+  opacity: 1;
+}
+
+/* Estilo del "pulgar" del slider */
+.volume-slider input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 20px;
+  height: 20px;
+  background: var(--primary-color);
+  border-radius: 50%;
+  cursor: pointer;
+  border: 3px solid var(--slider-thumb-border-color);
+}
+
+.volume-slider input[type="range"]::-moz-range-thumb {
+  width: 20px;
+  height: 20px;
+  background: var(--primary-color);
+  border-radius: 50%;
+  cursor: pointer;
+  border: 3px solid var(--slider-thumb-border-color);
+} 

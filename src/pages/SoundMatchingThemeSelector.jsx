@@ -9,7 +9,7 @@ export default function SoundMatchingThemeSelector() {
 
   const themes = [
     { name: 'Animals', value: 'animals' },
-    { name: 'Objects', value: 'objects', disabled: true },
+    { name: 'Objects', value: 'objects' },
   ];
 
   const handleStart = () => {
@@ -37,16 +37,14 @@ export default function SoundMatchingThemeSelector() {
         <motion.button
           key={t.value}
           className={`theme-btn ${theme === t.value ? 'active' : ''}`}
-          onClick={() => !t.disabled && setTheme(t.value)}
-          disabled={t.disabled}
-          whileHover={{ scale: t.disabled ? 1 : 1.08 }}
+          onClick={() => setTheme(t.value)}
+          whileHover={{ scale: 1.08 }}
           whileTap={{ scale: 0.95 }}
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.3 + i * 0.1, duration: 0.4 }}
         >
           {t.name}
-          {t.disabled && <span className="coming-soon-text"> (Coming Soon)</span>}
         </motion.button>
       ))}
 
@@ -61,6 +59,17 @@ export default function SoundMatchingThemeSelector() {
         transition={{ delay: 0.7, duration: 0.5 }}
       >
         Play
+      </motion.button>
+      <motion.button
+        className="back-to-menu-btn"
+        onClick={() => navigate('/')}
+        whileHover={{ scale: 1.05 }}
+        whileTap={{ scale: 0.95 }}
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.8, duration: 0.4 }}
+      >
+        Back to Menu
       </motion.button>
     </motion.div>
   );

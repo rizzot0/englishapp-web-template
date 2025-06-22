@@ -79,11 +79,19 @@
 /* Responsive grid layout */
 .grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
   gap: 1rem;
   max-width: 800px;
   width: 100%;
   margin: 0 auto;
+}
+
+.grid-8-cards {
+  grid-template-columns: repeat(4, 1fr);
+  max-width: 600px;
+}
+
+.grid-16-cards {
+  grid-template-columns: repeat(4, 1fr);
 }
 
 .card {
@@ -298,8 +306,11 @@
   }
   
   .grid {
-    grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
     gap: 0.8rem;
+  }
+  
+  .grid-8-cards, .grid-16-cards {
+    grid-template-columns: repeat(4, 1fr);
   }
   
   .memory-stats {
@@ -332,8 +343,15 @@
 
 @media (max-width: 480px) {
   .grid {
-    grid-template-columns: repeat(auto-fit, minmax(80px, 1fr));
     gap: 0.6rem;
+  }
+  
+  .grid-8-cards {
+    grid-template-columns: repeat(4, 1fr);
+  }
+
+  .grid-16-cards {
+    grid-template-columns: repeat(4, 1fr);
   }
   
   .card-face {

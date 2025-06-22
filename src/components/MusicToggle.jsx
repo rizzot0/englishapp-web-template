@@ -1,15 +1,27 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { stopSound, playSound } from '../utils/soundManager';
-import { toggleMusicMuted, getMusicMuted } from '../utils/musicState';
+import { toggleMusicMuted, getMusicMuted, subscribe } from '../utils/musicState';
 import { motion } from 'framer-motion';
 import './MusicToggle.css'; // lo crearemos después
 
 export default function MusicToggle() {
   const [muted, setMuted] = useState(getMusicMuted());
 
+  useEffect(() => {
+    // Nos suscribimos a los cambios del estado de la música
+    const unsubscribe = subscribe((newMutedState) => {
+      setMuted(newMutedState);
+    });
+
+    // Nos desuscribimos al desmontar el componente para evitar fugas de memoria
+    return () => {
+      unsubscribe();
+    };
+  }, []); // El array vacío asegura que esto solo se ejecute una vez
+
   const handleClick = () => {
     const isNowMuted = toggleMusicMuted();
-    setMuted(isNowMuted);
+    // setMuted(isNowMuted); // Ya no es necesario, el listener lo hará
 
     if (isNowMuted) {
       stopSound('background.wav');

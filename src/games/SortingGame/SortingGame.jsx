@@ -103,6 +103,9 @@ export default function SortingGame() {
             <motion.button whileHover={{ scale: 1.05 }} onClick={resetGame}>
                 🔄 Reset
             </motion.button>
+            <motion.button whileHover={{ scale: 1.05 }} onClick={() => navigate('/')}>
+                🏠 Back to Menu
+            </motion.button>
         </div>
 
         <AnimatePresence>
