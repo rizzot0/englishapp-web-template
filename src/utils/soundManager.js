@@ -20,7 +20,7 @@ export const loadSound = (name, loop = false) => {
 
   const category = getSoundCategory(name);
   const sound = new Howl({
-    src: [`/src/assets/sounds/${name}`],
+    src: [`/assets/sounds/${name}`],
     loop: loop,
     volume: soundConfig[category].volume,
     html5: true,

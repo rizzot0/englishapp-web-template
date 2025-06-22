@@ -1,9 +1,20 @@
-const CACHE_NAME = 'englishapp-cache-v1';
+const CACHE_NAME = 'englishapp-cache-v2';
 const urlsToCache = [
   '/',
   '/index.html',
-  '/manifest.json'
-  // No añadas los iconos aquí, el manifest ya los gestiona.
+  '/manifest.json',
+  '/assets/sounds/background.wav',
+  '/assets/sounds/correct.wav',
+  '/assets/sounds/incorrect.wav',
+  '/assets/sounds/win.wav',
+  '/assets/sounds/typing.wav',
+  '/assets/sounds/cardFlip.wav',
+  '/assets/images/icon_memory.png',
+  '/assets/images/icon_typing.png',
+  '/assets/images/icon_math.png',
+  '/assets/images/icon_order.png',
+  '/assets/images/icon_sound.png',
+  '/assets/images/eye.png'
 ];
 
 // Evento de instalación: se dispara cuando el SW se instala.

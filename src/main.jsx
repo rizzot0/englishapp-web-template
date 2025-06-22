@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import ReactDOM from 'react-dom/client';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import './styles/global.css';
@@ -25,6 +25,7 @@ import SoundMatchingGame from './games/SoundMatching/SoundMatchingGame.jsx';
 import IdentificationThemeSelector from './pages/IdentificationThemeSelector.jsx';
 import IdentificationGame from './games/IdentificationGame/IdentificationGame.jsx';
 import Statistics from './pages/Statistics.jsx';
+import AssetPreloader from './components/AssetPreloader.jsx';
 
 // Componente para registrar el service worker
 const ServiceWorkerRegistration = () => {
@@ -32,8 +33,14 @@ const ServiceWorkerRegistration = () => {
   return null;
 };
 
-ReactDOM.createRoot(document.getElementById('root')).render(
-  <React.StrictMode>
+const App = () => {
+  const [assetsLoaded, setAssetsLoaded] = useState(false);
+
+  if (!assetsLoaded) {
+    return <AssetPreloader onComplete={() => setAssetsLoaded(true)} />;
+  }
+
+  return (
     <ThemeProvider>
       <ServiceWorkerRegistration />
       <BackgroundAudio />
@@ -62,5 +69,11 @@ ReactDOM.createRoot(document.getElementById('root')).render(
         </Routes>
       </BrowserRouter>
     </ThemeProvider>
+  );
+};
+
+ReactDOM.createRoot(document.getElementById('root')).render(
+  <React.StrictMode>
+    <App />
   </React.StrictMode>
 );
