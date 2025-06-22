@@ -8,14 +8,16 @@
   flex-direction: column;
   align-items: center;
   position: relative;
+  gap: 1.5rem;
+  overflow: hidden;
 }
 
 .memory-game h2 {
-  color: #0081A7;
+  color: var(--text-secondary);
   font-size: clamp(1.8rem, 4vw, 2.4rem);
   margin-bottom: 0.5rem;
-  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
-  background: linear-gradient(135deg, #0081A7, #00AFB9);
+  text-shadow: 2px 2px 4px var(--shadow-light);
+  background: linear-gradient(135deg, var(--text-secondary), #00AFB9);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
@@ -23,37 +25,79 @@
 
 .memory-game p {
   font-size: clamp(1rem, 3.5vw, 1.3rem);
-  color: #F07167;
+  color: var(--bg-accent);
   margin-bottom: 1.5rem;
-  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
+  text-shadow: 1px 1px 2px var(--shadow-light);
+}
+
+.memory-stats {
+  width: 90%;
+  max-width: 600px;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  background: var(--card-bg);
+  backdrop-filter: blur(10px);
+  border-radius: 20px;
+  padding: 0.8rem 1rem;
+  box-shadow: 0 8px 25px var(--shadow-light);
+  border: 2px solid var(--card-border);
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.memory-stats .stat-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.2rem;
+  text-align: center;
+  flex-basis: 0;
+  flex-grow: 1;
+  min-width: 80px;
+}
+
+.memory-stats .stat-item span:first-child {
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+  font-weight: bold;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.memory-stats .stat-item span:last-child {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: var(--bg-accent);
+  text-shadow: 2px 2px 4px var(--shadow-light);
+}
+
+.memory-stats .best-score span:last-child {
+  color: #4CAF50;
 }
 
 /* Responsive grid layout */
 .grid {
   display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
   gap: 1rem;
-  grid-template-columns: repeat(4, 1fr);
-  max-width: 500px;
+  max-width: 800px;
   width: 100%;
-  padding: 1rem;
-  background: rgba(255, 255, 255, 0.1);
-  border-radius: 25px;
-  backdrop-filter: blur(15px);
-  border: 2px solid rgba(255, 255, 255, 0.2);
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+  margin: 0 auto;
 }
 
 .card {
-  aspect-ratio: 1 / 1;
+  aspect-ratio: 1;
   perspective: 1000px;
   cursor: pointer;
-  -webkit-tap-highlight-color: transparent; /* Evita el resaltado en móviles */
 }
 
 .card-inner {
   position: relative;
   width: 100%;
   height: 100%;
+  text-align: center;
+  transition: transform 0.5s;
   transform-style: preserve-3d;
 }
 
@@ -62,159 +106,253 @@
   width: 100%;
   height: 100%;
   backface-visibility: hidden;
-  -webkit-backface-visibility: hidden;
-  display: flex;
-  justify-content: center;
-  align-items: center;
   border-radius: 15px;
-  border: 2px solid rgba(255, 255, 255, 0.2);
-  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-  transition: all 0.3s ease-in-out;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2rem;
+  box-shadow: 0 8px 25px var(--shadow-light);
+  border: 2px solid var(--card-border);
+  transition: all 0.3s ease;
 }
 
 .card-front {
-  background: linear-gradient(135deg, #FED9B7, #F07167);
-  font-size: 2.5rem;
-  color: rgba(255, 255, 255, 0.8);
-  transform: rotateY(0deg);
-}
-
-.card:hover .card-front {
-  border-color: rgba(255, 255, 255, 0.5);
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+  background: var(--button-gradient);
+  color: white;
+  font-size: 3rem;
 }
 
 .card-back {
-  background: linear-gradient(135deg, #00AFB9, #0081A7);
+  background: var(--card-bg);
+  backdrop-filter: blur(10px);
   transform: rotateY(180deg);
-  font-size: 1.2rem;
-  font-weight: bold;
-  color: white;
-  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
+  padding: 0.5rem;
 }
 
 .card-back img {
-  width: 80%;
-  height: 80%;
+  max-width: 80%;
+  max-height: 80%;
   object-fit: contain;
-  filter: drop-shadow(0 4px 6px rgba(0, 0, 0, 0.2));
+  filter: drop-shadow(0 4px 8px var(--shadow-light));
 }
 
-/* --- Estados de la tarjeta --- */
-
-.card-back.flipping {
-  border-color: #00c3ff;
-  box-shadow: 0 0 20px 3px rgba(0, 195, 255, 0.7);
+.word-card-text {
+  font-size: 1.2rem;
+  font-weight: bold;
+  color: var(--text-secondary);
+  text-transform: capitalize;
 }
 
 .card-back.matched {
-  background: linear-gradient(135deg, #81c784, #4caf50);
-  border-color: rgba(255, 255, 255, 0.7);
-  animation: pulse-matched 0.5s ease-out;
+  background: linear-gradient(135deg, #4CAF50, #8BC34A);
+  border-color: #4CAF50;
+  box-shadow: 0 0 20px rgba(76, 175, 80, 0.5);
 }
 
-@keyframes pulse-matched {
-  0% {
-    transform: rotateY(180deg) scale(1);
-  }
-  50% {
-    transform: rotateY(180deg) scale(1.05);
-  }
-  100% {
-    transform: rotateY(180deg) scale(1);
-  }
+.card-back.matched img,
+.card-back.matched .word-card-text {
+  filter: brightness(1.2);
 }
 
-.play-btn {
-  margin-top: 2rem;
-  background: linear-gradient(135deg, #00AFB9 0%, #0081A7 100%);
-  color: white;
-  border: none;
-  padding: 1rem 2.5rem;
-  border-radius: 30px;
-  font-size: 1.3rem;
+.card-back.flipping {
+  animation: flip-shake 0.5s ease-in-out;
+}
+
+@keyframes flip-shake {
+  0%, 100% { transform: rotateY(180deg) translateX(0); }
+  25% { transform: rotateY(180deg) translateX(-5px); }
+  75% { transform: rotateY(180deg) translateX(5px); }
+}
+
+/* Botones del juego */
+.memory-buttons {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+  justify-content: center;
+  margin-top: 1rem;
+}
+
+.memory-buttons button {
+  background: var(--card-bg);
+  backdrop-filter: blur(10px);
+  border: 2px solid var(--card-border);
+  color: var(--text-secondary);
+  padding: 0.8rem 1.5rem;
+  border-radius: 20px;
   font-weight: bold;
+  font-size: 1rem;
   cursor: pointer;
-  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  position: relative;
-  overflow: hidden;
+  transition: all 0.3s ease;
+  box-shadow: 0 6px 20px var(--shadow-light);
 }
 
-.play-btn:hover {
-  transform: translateY(-5px) scale(1.05);
-  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3);
+.memory-buttons button:hover {
+  background: rgba(255, 255, 255, 0.3);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px var(--shadow-medium);
 }
 
-/* Popup de victoria mejorado */
-.win-popup {
+/* Pantalla final */
+.memory-game-end-wrapper {
   position: fixed;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
-  background: rgba(0, 0, 0, 0.7);
-  backdrop-filter: blur(10px);
+  background: rgba(0, 0, 0, 0.5);
   display: flex;
   justify-content: center;
   align-items: center;
-  z-index: 1000;
+  z-index: 10000;
+  backdrop-filter: blur(5px);
 }
 
-.win-popup > div {
-  background: linear-gradient(135deg, rgba(255, 255, 255, 0.95) 0%, rgba(254, 217, 183, 0.95) 100%);
-  border-radius: 30px;
-  padding: 3rem;
-  text-align: center;
-  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
-  max-width: 90%;
-  width: 500px;
-}
-
-.win-popup h2 {
-  font-size: 2.5rem;
-  color: #0081A7;
-}
-
-.win-popup p {
-  font-size: 1.3rem;
-  color: #F07167;
-  margin-bottom: 2rem;
-}
-
-.win-popup button {
-  background: linear-gradient(135deg, #F07167 0%, #FED9B7 100%);
-  color: white;
-  padding: 1rem 2rem;
+.memory-game-end-popup {
+  background: var(--card-bg);
+  backdrop-filter: blur(15px);
+  border: 2px solid var(--card-border);
   border-radius: 25px;
+  padding: 2rem;
+  max-width: 500px;
+  width: 90%;
+  text-align: center;
+  box-shadow: 0 20px 60px var(--shadow-heavy);
+}
+
+.memory-game-end-popup h2 {
+  color: var(--text-secondary);
+  font-size: 2rem;
+  margin-bottom: 1rem;
+}
+
+.memory-game-end-popup p {
+  color: var(--text-primary);
   font-size: 1.2rem;
+  margin-bottom: 1.5rem;
+}
+
+.final-stats {
+  background: var(--card-bg);
+  border-radius: 15px;
+  padding: 1rem;
+  margin-bottom: 1.5rem;
+  border: 1px solid var(--card-border);
+}
+
+.stat-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.5rem;
+  padding: 0.5rem 0;
+}
+
+.stat-row:last-child {
+  margin-bottom: 0;
+  border-top: 1px solid var(--card-border);
+  padding-top: 1rem;
+}
+
+.stat-label-final {
+  color: var(--text-secondary);
+  font-weight: bold;
+  font-size: 1rem;
+}
+
+.stat-value-final {
+  color: var(--bg-accent);
+  font-weight: bold;
+  font-size: 1.2rem;
+}
+
+.end-screen-buttons {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.end-screen-buttons button {
+  background: var(--button-gradient);
+  color: white;
+  border: none;
+  padding: 1rem 2rem;
+  border-radius: 20px;
+  font-weight: bold;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 6px 20px var(--shadow-medium);
+}
+
+.end-screen-buttons button:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 25px var(--shadow-heavy);
 }
 
 /* Responsive */
 @media (max-width: 768px) {
+  .memory-game {
+    padding: 1rem;
+  }
+  
   .grid {
-    grid-template-columns: repeat(4, minmax(60px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
     gap: 0.8rem;
-    max-width: 400px;
   }
   
-  .card-front::before {
-    font-size: 1.5rem;
+  .memory-stats {
+    padding: 0.6rem 0.8rem;
   }
   
-  .win-popup > div {
-    padding: 2rem;
-    margin: 1rem;
-    width: auto;
+  .memory-stats .stat-item {
+    min-width: 70px;
   }
   
-  .win-popup h2 {
-    font-size: 2rem;
+  .memory-buttons {
+    gap: 0.8rem;
+  }
+  
+  .memory-buttons button {
+    padding: 0.6rem 1.2rem;
+    font-size: 0.9rem;
+  }
+  
+  .end-screen-buttons {
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .end-screen-buttons button {
+    width: 100%;
+    max-width: 250px;
   }
 }
 
 @media (max-width: 480px) {
   .grid {
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: repeat(auto-fit, minmax(80px, 1fr));
+    gap: 0.6rem;
+  }
+  
+  .card-face {
+    font-size: 1.5rem;
+  }
+  
+  .word-card-text {
+    font-size: 1rem;
+  }
+  
+  .memory-game-end-popup {
+    padding: 1.5rem;
+  }
+  
+  .memory-game-end-popup h2 {
+    font-size: 1.5rem;
+  }
+  
+  .memory-game-end-popup p {
+    font-size: 1rem;
   }
 }

@@ -44,6 +44,8 @@ const wordSets = {
   ]
 };
 
+const GAME_DURATION = 60;
+
 export default function TypingGame() {
   const location = useLocation();
   const navigate = useNavigate();
@@ -54,48 +56,66 @@ export default function TypingGame() {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [typed, setTyped] = useState('');
   const [score, setScore] = useState(0);
-  const [time, setTime] = useState(60); 
-  const [showEnd, setShowEnd] = useState(false);
+  const [timeLeft, setTimeLeft] = useState(GAME_DURATION);
+  const [gameStarted, setGameStarted] = useState(false);
+  const [gameEnded, setGameEnded] = useState(false);
   const [isWrong, setIsWrong] = useState(false);
   const [wordCompleted, setWordCompleted] = useState(false);
-  const intervalRef = useRef(null);
+  const [typedChars, setTypedChars] = useState(0);
+  const [wpm, setWpm] = useState(0);
 
-  useEffect(() => {
-    // Barajar las palabras al inicio
+  const prepareGame = useCallback(() => {
     setWords([...wordSets[selectedTheme]].sort(() => Math.random() - 0.5));
+    setCurrentIndex(0);
+    setTyped('');
+    setScore(0);
+    setTimeLeft(GAME_DURATION);
+    setGameStarted(false);
+    setGameEnded(false);
+    setTypedChars(0);
+    setWpm(0);
   }, [selectedTheme]);
 
   useEffect(() => {
+    prepareGame();
     loadSound('typing.wav');
     loadSound('correct.wav');
     loadSound('incorrect.wav');
-    loadSound('alarm.wav');
     loadSound('win.wav');
+  }, [prepareGame]);
 
-    intervalRef.current = setInterval(() => {
-      setTime(prev => {
+  useEffect(() => {
+    if (!gameStarted || gameEnded) return;
+
+    const timer = setInterval(() => {
+      setTimeLeft(prev => {
         if (prev <= 1) {
-          clearInterval(intervalRef.current);
-          playSound('alarm.wav');
-          setShowEnd(true);
+          clearInterval(timer);
+          setGameEnded(true);
+          playSound('win.wav');
+          // WPM Calculation
+          setWpm(Math.round((typedChars / 5) / (GAME_DURATION / 60)));
           return 0;
         }
         return prev - 1;
       });
     }, 1000);
 
-    return () => clearInterval(intervalRef.current);
-  }, []);
-  
+    return () => clearInterval(timer);
+  }, [gameStarted, gameEnded, typedChars]);
+
   const handleKeyDown = useCallback((e) => {
-    if (time <= 0 || showEnd || wordCompleted) return;
-  
+    if (gameEnded || wordCompleted) return;
+
+    if (!gameStarted) {
+      setGameStarted(true);
+    }
+
     const currentWord = words[currentIndex]?.word;
     if (!currentWord) return;
-  
+
     const { key } = e;
-  
-    // Solo procesar letras del alfabeto
+
     if (key.length === 1 && key.match(/[a-z]/i)) {
       const nextChar = currentWord[typed.length];
       
@@ -103,10 +123,11 @@ export default function TypingGame() {
         playSound('typing.wav');
         const newTyped = typed + key.toLowerCase();
         setTyped(newTyped);
-  
+
         if (newTyped === currentWord) {
-          playSound('win.wav');
+          playSound('correct.wav');
           setScore(prev => prev + 1);
+          setTypedChars(prev => prev + currentWord.length);
           setWordCompleted(true);
           
           setTimeout(() => {
@@ -121,7 +142,7 @@ export default function TypingGame() {
         setTimeout(() => setIsWrong(false), 300);
       }
     }
-  }, [typed, currentIndex, time, showEnd, wordCompleted, words]);
+  }, [typed, currentIndex, gameEnded, wordCompleted, words, gameStarted]);
 
   useEffect(() => {
     window.addEventListener('keydown', handleKeyDown);
@@ -131,23 +152,25 @@ export default function TypingGame() {
   const currentWord = words[currentIndex]?.word || '';
   const currentImage = words[currentIndex]?.image || '';
 
+  const formatTime = (seconds) => {
+    const mins = Math.floor(seconds / 60);
+    const secs = seconds % 60;
+    return `${mins}:${secs.toString().padStart(2, '0')}`;
+  };
+
   return (
     <div className="typing-game">
-      <div className="game-stats">
-        <motion.h2>
-          Tiempo: <AnimatePresence mode="popLayout"><motion.span key={time} initial={{ scale: 1.5, opacity: 0}} animate={{ scale: 1, opacity: 1}} exit={{ scale: 0.5, opacity: 0}} transition={{ duration: 0.3 }}>{time}</motion.span></AnimatePresence>
-        </motion.h2>
-        <div className="timer-bar-container">
-          <motion.div 
-            className="timer-bar"
-            initial={{ width: "100%" }}
-            animate={{ width: `${(time / 60) * 100}%` }}
-            transition={{ duration: 1, ease: "linear" }}
-          />
-        </div>
-        <motion.h3>
-          Puntaje: <AnimatePresence mode="popLayout"><motion.span key={score} initial={{ scale: 1.5, opacity: 0}} animate={{ scale: 1, opacity: 1}} exit={{ scale: 0.5, opacity: 0}} transition={{ duration: 0.3, type: "spring" }}>{score}</motion.span></AnimatePresence>
-        </motion.h3>
+      <div className="typing-stats">
+        <div className="stat-item"><span>Score</span><span>{score}</span></div>
+        <div className="stat-item"><span>Time</span><span>{formatTime(timeLeft)}</span></div>
+      </div>
+      <div className="timer-bar-container">
+        <motion.div 
+          className="timer-bar"
+          initial={{ width: "100%" }}
+          animate={{ width: `${(timeLeft / GAME_DURATION) * 100}%` }}
+          transition={{ duration: 1, ease: "linear" }}
+        />
       </div>
 
       <AnimatePresence mode="wait">
@@ -171,7 +194,6 @@ export default function TypingGame() {
         <AnimatePresence>
           {currentWord.split('').map((char, idx) => {
             const isTyped = idx < typed.length;
-            const isCorrect = isTyped && typed[idx] === char;
             
             return (
               <motion.span
@@ -190,24 +212,29 @@ export default function TypingGame() {
       </motion.div>
 
       <AnimatePresence>
-        {showEnd && (
-          <motion.div
-            className="typing-end-wrapper"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-          >
-            <motion.div
-              className="typing-end-popup"
-              initial={{ scale: 0.7, opacity: 0, y: 50 }}
-              animate={{ scale: 1, opacity: 1, y: 0 }}
-              exit={{ scale: 0.7, opacity: 0, y: 50 }}
-              transition={{ duration: 0.4, type: 'spring' }}
-            >
-              <h2>⏰ ¡Tiempo terminado!</h2>
-              <h3>Tu puntaje final fue: {score}</h3>
-              <button onClick={() => navigate('/')}>🏠 Volver al Menú</button>
-            </motion.div>
+        {gameEnded && (
+          <motion.div className="game-over-modal">
+            <div className="modal-content">
+              <h2>⏰ Time's Up!</h2>
+              <div className="final-stats">
+                <div className="stat-row">
+                  <span className="stat-label-final">Final Score:</span>
+                  <span className="stat-value-final">{score}</span>
+                </div>
+                <div className="stat-row">
+                  <span className="stat-label-final">Words Per Minute:</span>
+                  <span className="stat-value-final">{wpm}</span>
+                </div>
+              </div>
+              <div className="modal-buttons">
+                <motion.button onClick={prepareGame} className="play-again-btn">
+                  Play Again
+                </motion.button>
+                <motion.button onClick={() => navigate('/')} className="menu-btn">
+                  Back to Menu
+                </motion.button>
+              </div>
+            </div>
           </motion.div>
         )}
       </AnimatePresence>

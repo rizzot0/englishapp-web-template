@@ -1,29 +1,28 @@
-// src/pages/MemoryThemeSelector.jsx
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import './TypingThemeSelector.css'; // Apuntamos al CSS unificado
+import './TypingThemeSelector.css'; // Reutilizamos el CSS unificado
 
-export default function MemoryThemeSelector() {
+export default function IdentificationThemeSelector() {
   const navigate = useNavigate();
   const [theme, setTheme] = useState('');
 
   const themes = [
-    { name: 'Colors', value: 'colors' },
-    { name: 'Shapes', value: 'shapes' },
-    { name: 'Emotions', value: 'emotions' },
-    { name: 'Fruits', value: 'fruits' }
+    { name: 'Body Parts', value: 'bodyParts' },
+    { name: 'Fruits', value: 'fruits' },
+    { name: 'Animals', value: 'animals' },
+    { name: 'Family', value: 'family' },
   ];
 
-  const handlePlay = () => {
+  const handleStart = () => {
     if (theme) {
-      navigate(`/memory?theme=${theme}`);
+      navigate(`/identification-game?theme=${theme}`);
     }
   };
 
   return (
     <motion.div
-      className="typing-selector"
+      className="typing-selector" // Usamos la clase unificada
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 0.6 }}
@@ -53,7 +52,7 @@ export default function MemoryThemeSelector() {
 
       <motion.button
         className="start-btn"
-        onClick={handlePlay}
+        onClick={handleStart}
         disabled={!theme}
         whileHover={{ scale: !theme ? 1 : 1.05 }}
         whileTap={{ scale: !theme ? 1 : 0.95 }}
@@ -65,4 +64,4 @@ export default function MemoryThemeSelector() {
       </motion.button>
     </motion.div>
   );
-}
+} 

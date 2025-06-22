@@ -1,3 +1,40 @@
+/* Variables CSS para temas */
+:root {
+  /* Colores modo claro */
+  --bg-primary: #FDFCDC;
+  --bg-secondary: #FED9B7;
+  --bg-accent: #F07167;
+  --text-primary: #333;
+  --text-secondary: #0081A7;
+  --card-bg: rgba(255, 255, 255, 0.1);
+  --card-border: rgba(255, 255, 255, 0.2);
+  --shadow-light: rgba(0, 0, 0, 0.1);
+  --shadow-medium: rgba(0, 0, 0, 0.2);
+  --shadow-heavy: rgba(0, 0, 0, 0.3);
+  --button-gradient: linear-gradient(135deg, #F07167 0%, #FED9B7 100%);
+  --particle-color: rgba(255, 255, 255, 0.6);
+  --scrollbar-bg: rgba(255, 255, 255, 0.1);
+  --scrollbar-thumb: linear-gradient(135deg, #F07167, #00AFB9);
+}
+
+/* Variables modo oscuro */
+.dark-mode {
+  --bg-primary: #1a1a2e;
+  --bg-secondary: #16213e;
+  --bg-accent: #0f3460;
+  --text-primary: #ffffff;
+  --text-secondary: #00d4ff;
+  --card-bg: rgba(255, 255, 255, 0.05);
+  --card-border: rgba(255, 255, 255, 0.1);
+  --shadow-light: rgba(0, 0, 0, 0.3);
+  --shadow-medium: rgba(0, 0, 0, 0.5);
+  --shadow-heavy: rgba(0, 0, 0, 0.7);
+  --button-gradient: linear-gradient(135deg, #00d4ff 0%, #0099cc 100%);
+  --particle-color: rgba(0, 212, 255, 0.4);
+  --scrollbar-bg: rgba(255, 255, 255, 0.05);
+  --scrollbar-thumb: linear-gradient(135deg, #00d4ff, #0099cc);
+}
+
 /* Global Reset y Base */
 * {
   box-sizing: border-box;
@@ -7,12 +44,13 @@
 
 body {
   font-family: 'Comic Sans MS', cursive, sans-serif;
-  background: linear-gradient(135deg, #FDFCDC 0%, #FED9B7 50%, #F07167 100%);
-  color: #333;
+  background: linear-gradient(135deg, var(--bg-primary) 0%, var(--bg-secondary) 50%, var(--bg-accent) 100%);
+  color: var(--text-primary);
   line-height: 1.5;
   min-height: 100vh;
   position: relative;
   overflow-x: hidden;
+  transition: all 0.3s ease;
 }
 
 /* Fondo animado con burbujas */
@@ -24,9 +62,9 @@ body::before {
   width: 100%;
   height: 100%;
   background-image: 
-    radial-gradient(circle at 20% 80%, rgba(255, 255, 255, 0.1) 0%, transparent 50%),
-    radial-gradient(circle at 80% 20%, rgba(255, 255, 255, 0.1) 0%, transparent 50%),
-    radial-gradient(circle at 40% 40%, rgba(255, 255, 255, 0.05) 0%, transparent 50%);
+    radial-gradient(circle at 20% 80%, var(--card-bg) 0%, transparent 50%),
+    radial-gradient(circle at 80% 20%, var(--card-bg) 0%, transparent 50%),
+    radial-gradient(circle at 40% 40%, var(--card-bg) 0%, transparent 50%);
   animation: float 20s ease-in-out infinite;
   pointer-events: none;
   z-index: -1;
@@ -43,17 +81,17 @@ img {
   max-width: 100%;
   height: auto;
   display: block;
-  filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.1));
+  filter: drop-shadow(0 4px 8px var(--shadow-light));
 }
 
 /* Tipografía Escalable */
 h1, h2, h3, h4, h5, h6 {
   font-weight: bold;
   text-align: center;
-  color: #0081A7;
+  color: var(--text-secondary);
   margin-bottom: 1rem;
   font-size: clamp(1.5rem, 3vw, 2.5rem);
-  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+  text-shadow: 2px 2px 4px var(--shadow-light);
   position: relative;
 }
 
@@ -65,7 +103,7 @@ h1::after, h2::after {
   transform: translateX(-50%);
   width: 60px;
   height: 3px;
-  background: linear-gradient(90deg, #F07167, #00AFB9);
+  background: var(--button-gradient);
   border-radius: 2px;
 }
 
@@ -78,10 +116,10 @@ button {
   border: none;
   cursor: pointer;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  box-shadow: 0 6px 15px rgba(0,0,0,0.2);
+  box-shadow: 0 6px 15px var(--shadow-medium);
   position: relative;
   overflow: hidden;
-  background: linear-gradient(135deg, #F07167 0%, #FED9B7 100%);
+  background: var(--button-gradient);
   color: white;
   font-weight: bold;
 }
@@ -103,7 +141,7 @@ button:hover::before {
 
 button:hover {
   transform: translateY(-3px) scale(1.05);
-  box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+  box-shadow: 0 10px 25px var(--shadow-heavy);
 }
 
 button:active {
@@ -125,18 +163,18 @@ button:active {
   align-items: center;
   min-height: 100px;
   margin-bottom: 2rem;
-  background: rgba(255, 255, 255, 0.1);
+  background: var(--card-bg);
   border-radius: 20px;
   backdrop-filter: blur(10px);
-  border: 1px solid rgba(255, 255, 255, 0.2);
+  border: 1px solid var(--card-border);
 }
 
 .math-question {
   font-size: clamp(2rem, 6vw, 3rem);
-  color: #0081A7;
+  color: var(--text-secondary);
   text-align: center;
   margin: 0;
-  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+  text-shadow: 2px 2px 4px var(--shadow-light);
 }
 
 /* Efectos de partículas flotantes */
@@ -154,7 +192,7 @@ button:active {
   position: absolute;
   width: 6px;
   height: 6px;
-  background: rgba(255, 255, 255, 0.6);
+  background: var(--particle-color);
   border-radius: 50%;
   animation: float-particle 15s infinite linear;
 }
@@ -182,16 +220,21 @@ button:active {
 }
 
 ::-webkit-scrollbar-track {
-  background: rgba(255, 255, 255, 0.1);
+  background: var(--scrollbar-bg);
   border-radius: 10px;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: linear-gradient(135deg, #F07167, #00AFB9);
+  background: var(--scrollbar-thumb);
   border-radius: 10px;
-  border: 2px solid rgba(255, 255, 255, 0.3);
+  border: 2px solid var(--card-border);
 }
 
 ::-webkit-scrollbar-thumb:hover {
   background: linear-gradient(135deg, #00AFB9, #F07167);
+}
+
+/* Transiciones suaves para cambios de tema */
+* {
+  transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
 }

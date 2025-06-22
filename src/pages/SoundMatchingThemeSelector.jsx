@@ -1,23 +1,20 @@
-// src/pages/MemoryThemeSelector.jsx
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import './TypingThemeSelector.css'; // Apuntamos al CSS unificado
+import './TypingThemeSelector.css'; // Reutilizamos el CSS del selector de Typing
 
-export default function MemoryThemeSelector() {
+export default function SoundMatchingThemeSelector() {
   const navigate = useNavigate();
   const [theme, setTheme] = useState('');
 
   const themes = [
-    { name: 'Colors', value: 'colors' },
-    { name: 'Shapes', value: 'shapes' },
-    { name: 'Emotions', value: 'emotions' },
-    { name: 'Fruits', value: 'fruits' }
+    { name: 'Animals', value: 'animals' },
+    { name: 'Objects', value: 'objects', disabled: true },
   ];
 
-  const handlePlay = () => {
+  const handleStart = () => {
     if (theme) {
-      navigate(`/memory?theme=${theme}`);
+      navigate(`/sound-matching?theme=${theme}`);
     }
   };
 
@@ -40,20 +37,22 @@ export default function MemoryThemeSelector() {
         <motion.button
           key={t.value}
           className={`theme-btn ${theme === t.value ? 'active' : ''}`}
-          onClick={() => setTheme(t.value)}
-          whileHover={{ scale: 1.08 }}
+          onClick={() => !t.disabled && setTheme(t.value)}
+          disabled={t.disabled}
+          whileHover={{ scale: t.disabled ? 1 : 1.08 }}
           whileTap={{ scale: 0.95 }}
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.3 + i * 0.1, duration: 0.4 }}
         >
           {t.name}
+          {t.disabled && <span className="coming-soon-text"> (Coming Soon)</span>}
         </motion.button>
       ))}
 
       <motion.button
         className="start-btn"
-        onClick={handlePlay}
+        onClick={handleStart}
         disabled={!theme}
         whileHover={{ scale: !theme ? 1 : 1.05 }}
         whileTap={{ scale: !theme ? 1 : 0.95 }}
@@ -65,4 +64,4 @@ export default function MemoryThemeSelector() {
       </motion.button>
     </motion.div>
   );
-}
+} 

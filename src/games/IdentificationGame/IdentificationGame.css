@@ -1,0 +1,99 @@
+.identification-game {
+  font-family: 'Comic Sans MS', cursive, sans-serif;
+  min-height: 100vh;
+  padding: 2rem 1rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.5rem;
+  position: relative;
+  overflow-x: hidden;
+}
+
+/* Reutilizamos los estilos de la barra de stats y timer de otros juegos,
+   así que no es necesario re-declarar .typing-stats, .timer-bar-container, etc.
+   Solo necesitamos los estilos específicos para este juego. */
+
+.question-container-id {
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.7), rgba(255, 255, 255, 0.4));
+  backdrop-filter: blur(10px);
+  border-radius: 30px;
+  padding: 1.5rem;
+  margin: 1rem 0;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+  border: 2px solid rgba(255, 255, 255, 0.8);
+  text-align: center;
+}
+
+.item-image-id {
+  width: 100%;
+  max-width: 250px;
+  height: 250px;
+  object-fit: contain;
+  border-radius: 20px;
+}
+
+.prompt-id {
+  margin-top: 1rem;
+  font-size: clamp(1.5rem, 5vw, 2rem);
+  color: #003459;
+}
+
+.options-container-id {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1.5rem;
+  width: 100%;
+  max-width: 600px;
+}
+
+.option-button-id {
+  background: linear-gradient(135deg, #00AFB9, #0081A7);
+  border: 3px solid transparent;
+  border-radius: 20px;
+  padding: 1.5rem;
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: white;
+  cursor: pointer;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+  transition: all 0.3s ease;
+  text-transform: capitalize;
+}
+
+.option-button-id:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.2);
+}
+
+.option-button-id.correct {
+  background: linear-gradient(135deg, #4CAF50, #8BC34A);
+  border-color: white;
+  transform: scale(1.05);
+}
+
+.option-button-id.incorrect {
+  background: linear-gradient(135deg, #d32f2f, #f44336);
+  animation: shake 0.5s ease;
+}
+
+.option-button-id.correct-answer {
+  background: linear-gradient(135deg, #a5d6a7, #c8e6c9);
+  color: #1b5e20;
+  border-color: #4CAF50;
+}
+
+.option-button-id.disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  20%, 60% { transform: translateX(-10px); }
+  40%, 80% { transform: translateX(10px); }
+}
+
+/* Los estilos del modal son globales y se reutilizan de otros CSS, no es necesario redefinirlos */ 
