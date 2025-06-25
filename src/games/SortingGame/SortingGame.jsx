@@ -4,6 +4,7 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence, Reorder } from 'framer-motion';
 import './SortingGame.css';
 import { loadSound, playSound } from '../../utils/soundManager';
+import { gameStatsAPI } from '../../utils/supabase';
 
 const themeItems = {
   days: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'],
@@ -20,6 +21,7 @@ export default function SortingGame() {
   const [items, setItems] = useState([]);
   const [originalOrder, setOriginalOrder] = useState([]);
   const [status, setStatus] = useState(null); // 'correct', 'incorrect'
+  const [savingStats, setSavingStats] = useState(false);
 
   useEffect(() => {
     const list = themeItems[theme];
@@ -35,15 +37,49 @@ export default function SortingGame() {
 
   const shuffle = (arr) => [...arr].sort(() => Math.random() - 0.5);
 
+  // Guardar estadísticas en Supabase
+  const saveStatsToDatabase = async (isCorrect) => {
+    if (!isCorrect) return;
+    try {
+      setSavingStats(true);
+      const gameData = {
+        game_type: 'sortingGame',
+        theme: theme,
+        score: isCorrect ? 1 : 0,
+        duration: null,
+        mistakes: null,
+        correct_answers: isCorrect ? items.length : 0,
+        total_questions: items.length,
+        difficulty: 'normal',
+        player_name: 'Estudiante',
+        wpm: null,
+        accuracy: null
+      };
+      console.log('Intentando guardar en Supabase:', gameData);
+      const result = await gameStatsAPI.saveGameStats(gameData);
+      console.log('Respuesta de Supabase:', result);
+      if (result.success) {
+        console.log('Estadísticas guardadas en la base de datos');
+      } else {
+        console.error('Error guardando estadísticas:', result.error);
+      }
+    } catch (error) {
+      console.error('Error guardando estadísticas en la base de datos:', error);
+    } finally {
+      setSavingStats(false);
+    }
+  };
+
   const checkOrder = () => {
     const isCorrect = items.join(',') === originalOrder.join(',');
     setStatus(isCorrect ? 'correct' : 'incorrect');
     playSound(isCorrect ? 'correct.wav' : 'incorrect.wav');
     if (isCorrect) {
       setTimeout(() => playSound('win.wav'), 500);
+      saveStatsToDatabase(true);
     } else {
-        // Reset status after a delay if incorrect
-        setTimeout(() => setStatus(null), 1000);
+      // Reset status after a delay if incorrect
+      setTimeout(() => setStatus(null), 1000);
     }
   };
 
@@ -125,6 +161,11 @@ export default function SortingGame() {
                 >
                     <h2>🎉 Well Done!</h2>
                     <p>You sorted them all correctly!</p>
+                    {savingStats && (
+                      <div className="stat-row saving-stats">
+                        <span className="stat-label-final">💾 Guardando estadísticas...</span>
+                      </div>
+                    )}
                     <div className="end-screen-buttons">
                         <button onClick={resetGame}>Play Again</button>
                         <button onClick={() => navigate('/')}>Back to Menu</button>

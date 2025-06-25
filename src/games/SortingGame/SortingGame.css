@@ -109,13 +109,14 @@
 }
 
 .sorting-end-popup {
-  background: linear-gradient(135deg, rgba(253, 252, 220, 0.95), rgba(254, 217, 183, 0.95));
-  border: 3px solid rgba(255, 255, 255, 0.4);
+  background: var(--card-bg);
+  backdrop-filter: blur(15px);
+  border: 2px solid var(--card-border);
   border-radius: 30px;
-  padding: 2rem;
+  padding: 2rem 3rem;
   width: 100%;
   max-width: 450px;
-  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.25);
+  box-shadow: 0 15px 40px var(--shadow-heavy);
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -125,18 +126,33 @@
 
 .sorting-end-popup h2 {
   font-size: clamp(1.8rem, 5vw, 2.5rem);
-  color: #F07167;
+  color: var(--text-secondary);
+  text-shadow: 2px 2px 4px var(--shadow-light);
 }
 
 .sorting-end-popup p {
   font-size: clamp(1.2rem, 4vw, 1.6rem);
-  color: #0081A7;
+  color: var(--text-primary);
   margin-bottom: 2rem;
 }
 
 .end-screen-buttons {
   display: flex;
   gap: 1rem;
+}
+
+.end-screen-buttons button {
+  padding: 0.8rem 1.5rem;
+  border: none;
+  border-radius: 20px;
+  font-size: 1.1rem;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+  font-family: 'Comic Sans MS', cursive, sans-serif;
+  color: white;
+  background: var(--button-gradient);
 }
 
 @media (max-width: 400px) {

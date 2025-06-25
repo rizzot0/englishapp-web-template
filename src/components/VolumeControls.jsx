@@ -33,7 +33,7 @@ const VolumeControls = () => {
         />
       </div>
       <div className="volume-slider">
-        <label>SFX</label>
+        <label>Sound Effects</label>
         <input
           type="range"
           min="0"

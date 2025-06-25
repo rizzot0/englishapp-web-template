@@ -3,6 +3,7 @@ import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { loadSound, playSound } from '../../utils/soundManager';
+import { gameStatsAPI } from '../../utils/supabase';
 import './MathGame.css';
 
 const bodyParts = [ 
@@ -26,6 +27,7 @@ export default function MathGame() {
   const navigate = useNavigate();
   const params = new URLSearchParams(location.search);
   const theme = params.get('theme') || 'math';
+  const difficulty = params.get('difficulty') || 'easy';
 
   const [question, setQuestion] = useState({ text: '', image: null });
   const [options, setOptions] = useState([]);
@@ -36,19 +38,29 @@ export default function MathGame() {
   const [isAnswering, setIsAnswering] = useState(false);
   const [feedback, setFeedback] = useState({ selected: null, correct: null });
   const timerRef = useRef(null);
+  const [savingStats, setSavingStats] = useState(false);
 
   const generateQuestion = useCallback(() => {
     setIsAnswering(false);
     setFeedback({ selected: null, correct: null });
 
     if (theme === 'math') {
+        // Definir los rangos según la dificultad
+        let max = 10;
+        if (difficulty === 'medium') max = 20;
+        if (difficulty === 'hard') max = 50;
+
         let a, b, result, op, isSum;
+        // Intentar hasta encontrar una operación válida
         do {
-            a = Math.floor(Math.random() * 21);
-            b = Math.floor(Math.random() * 21);
-            isSum = Math.random() > 0.5;
-            result = isSum ? a + b : a - b;
-        } while (result > 20 || result < 0);
+          isSum = Math.random() > 0.5;
+          a = Math.floor(Math.random() * (max + 1));
+          b = Math.floor(Math.random() * (max + 1));
+          if (!isSum && a < b) [a, b] = [b, a]; // Para restas, a >= b
+          result = isSum ? a + b : a - b;
+        } while (
+          a > max || b > max || result > max || result < 0
+        );
 
         op = isSum ? '+' : '-';
         setQuestion({ text: `${a} ${op} ${b} = ?`, image: null });
@@ -57,7 +69,7 @@ export default function MathGame() {
 
         const choices = new Set([correctAnswer]);
         while(choices.size < 3) {
-            const fakeNum = Math.floor(Math.random() * 21);
+            const fakeNum = Math.floor(Math.random() * (max + 1));
             choices.add(numberWords[fakeNum]);
         }
         setOptions(shuffle([...choices]));
@@ -73,7 +85,7 @@ export default function MathGame() {
         }
         setOptions(shuffle([...choices]));
     }
-  }, [theme]);
+  }, [theme, difficulty]);
 
   useEffect(() => {
     loadSound('correct.wav');
@@ -122,6 +134,45 @@ export default function MathGame() {
     generateQuestion();
     timerRef.current = setInterval(() => setTime(t => t - 1), 1000);
   };
+
+  // Guardar estadísticas en Supabase
+  const saveStatsToDatabase = async () => {
+    try {
+      setSavingStats(true);
+      const gameData = {
+        game_type: 'mathGame',
+        theme: theme,
+        score: score,
+        duration: 60 - time,
+        mistakes: null, // No se cuenta explícitamente
+        correct_answers: score,
+        total_questions: null, // No se cuenta explícitamente
+        difficulty: 'normal',
+        player_name: 'Estudiante',
+        wpm: null,
+        accuracy: null
+      };
+      console.log('Intentando guardar en Supabase:', gameData);
+      const result = await gameStatsAPI.saveGameStats(gameData);
+      console.log('Respuesta de Supabase:', result);
+      if (result.success) {
+        console.log('Estadísticas guardadas en la base de datos');
+      } else {
+        console.error('Error guardando estadísticas:', result.error);
+      }
+    } catch (error) {
+      console.error('Error guardando estadísticas en la base de datos:', error);
+    } finally {
+      setSavingStats(false);
+    }
+  };
+
+  useEffect(() => {
+    if (showEnd) {
+      saveStatsToDatabase();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [showEnd]);
 
   return (
     <div className="math-game">
@@ -198,24 +249,26 @@ export default function MathGame() {
 
         <AnimatePresence>
             {showEnd && (
-            <motion.div className="math-game-end-wrapper">
-                <motion.div 
-                    className="math-game-end-popup"
-                    initial={{ scale: 0.7, opacity: 0, y: 50 }}
-                    animate={{ scale: 1, opacity: 1, y: 0 }}
-                    exit={{ scale: 0.7, opacity: 0, y: 50 }}
-                    transition={{ type: 'spring' }}
-                >
-                    <h2>🎉 Time's Up!</h2>
-                    <h3>Your final score is: {score}</h3>
-                    <div className="end-screen-buttons">
-                        <button onClick={restart}>🔄 Play Again</button>
-                        <button onClick={() => navigate('/')}>🏠 Back to Menu</button>
+                <motion.div className="math-end-popup">
+                    <h2>⏰ Time's Up!</h2>
+                    <div className="final-stats-math">
+                        <div className="stat-row-math">
+                            <span className="stat-label-final">Final Score:</span>
+                            <span className="stat-value-final">{score}</span>
+                        </div>
+                        {savingStats && (
+                          <div className="stat-row-math saving-stats">
+                            <span className="stat-label-final">💾 Guardando estadísticas...</span>
+                          </div>
+                        )}
+                    </div>
+                    <div className="end-screen-buttons-math">
+                        <button onClick={restart}>Play Again</button>
+                        <button onClick={() => navigate('/')}>Back to Menu</button>
                     </div>
                 </motion.div>
-            </motion.div>
             )}
-      </AnimatePresence>
+        </AnimatePresence>
     </div>
   );
 }

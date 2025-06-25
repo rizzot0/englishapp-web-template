@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { 
   getProgressSummary, 
   getGameStats, 
@@ -8,19 +8,41 @@ import {
   formatDate,
   clearProgress 
 } from '../utils/progressManager';
+import { gameStatsAPI } from '../utils/supabase';
 import './Statistics.css';
+import jsPDF from 'jspdf';
+import html2canvas from 'html2canvas';
+import { FaUserLock } from 'react-icons/fa';
 
 const Statistics = () => {
   const [summary, setSummary] = useState(null);
   const [selectedGame, setSelectedGame] = useState(null);
   const [showConfirmClear, setShowConfirmClear] = useState(false);
+  const [loading, setLoading] = useState(true);
+  const [dbStats, setDbStats] = useState([]);
+  const [viewMode, setViewMode] = useState('local'); // 'local' o 'database'
+  const statsRef = React.useRef();
+  const navigate = useNavigate();
 
   useEffect(() => {
     loadStatistics();
+    loadDatabaseStats();
   }, []);
 
   const loadStatistics = () => {
     setSummary(getProgressSummary());
+    setLoading(false);
+  };
+
+  const loadDatabaseStats = async () => {
+    try {
+      const result = await gameStatsAPI.getAllStats(100);
+      if (result.success) {
+        setDbStats(result.data || []);
+      }
+    } catch (error) {
+      console.error('Error cargando estadísticas de la base de datos:', error);
+    }
   };
 
   const getGameDisplayName = (gameName) => {
@@ -41,8 +63,83 @@ const Statistics = () => {
     setShowConfirmClear(false);
   };
 
-  if (!summary) {
-    return <div className="loading">Cargando estadísticas...</div>;
+  const getDatabaseSummary = () => {
+    if (!dbStats.length) return null;
+
+    const totalGames = dbStats.length;
+    const totalScore = dbStats.reduce((sum, stat) => sum + (stat.score || 0), 0);
+    const totalTime = dbStats.reduce((sum, stat) => sum + (stat.duration || 0), 0);
+    
+    // Agrupar por tipo de juego
+    const gamesByType = dbStats.reduce((acc, stat) => {
+      const gameType = stat.game_type;
+      if (!acc[gameType]) {
+        acc[gameType] = {
+          totalGames: 0,
+          totalScore: 0,
+          bestScore: 0,
+          averageScore: 0,
+          totalTime: 0
+        };
+      }
+      acc[gameType].totalGames++;
+      acc[gameType].totalScore += stat.score || 0;
+      acc[gameType].bestScore = Math.max(acc[gameType].bestScore, stat.score || 0);
+      acc[gameType].totalTime += stat.duration || 0;
+      return acc;
+    }, {});
+
+    // Calcular promedios
+    Object.keys(gamesByType).forEach(gameType => {
+      gamesByType[gameType].averageScore = Math.round(
+        gamesByType[gameType].totalScore / gamesByType[gameType].totalGames
+      );
+    });
+
+    return {
+      totalGames,
+      totalScore,
+      totalTime,
+      games: gamesByType
+    };
+  };
+
+  const currentSummary = viewMode === 'database' ? getDatabaseSummary() : summary;
+
+  // Función para exportar a PDF
+  const handleExportPDF = async () => {
+    if (!statsRef.current) return;
+    const element = statsRef.current;
+    const canvas = await html2canvas(element, { scale: 2 });
+    const imgData = canvas.toDataURL('image/png');
+    const pdf = new jsPDF({ orientation: 'portrait', unit: 'pt', format: 'a4' });
+    const pageWidth = pdf.internal.pageSize.getWidth();
+    const pageHeight = pdf.internal.pageSize.getHeight();
+    // Ajustar la imagen al ancho de la página
+    const imgWidth = pageWidth - 40;
+    const imgHeight = (canvas.height * imgWidth) / canvas.width;
+    pdf.addImage(imgData, 'PNG', 20, 20, imgWidth, imgHeight);
+    pdf.save('estadisticas.pdf');
+  };
+
+  if (loading) {
+    return (
+      <div className="statistics-page">
+        <div className="loading">Cargando estadísticas...</div>
+      </div>
+    );
+  }
+
+  if (!currentSummary) {
+    return (
+      <div className="statistics-page">
+        <div className="no-data">
+          <h2>📊 No hay datos disponibles</h2>
+          <p>¡Juega algunos juegos para ver tus estadísticas!</p>
+          <Link to="/" className="back-button">← Volver al Menú</Link>
+        </div>
+      </div>
+    );
   }
 
   return (
@@ -52,6 +149,7 @@ const Statistics = () => {
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
+        ref={statsRef}
       >
         {/* Header */}
         <div className="stats-header">
@@ -59,12 +157,38 @@ const Statistics = () => {
             ← Volver al Menú
           </Link>
           <h1>📊 Mis Estadísticas</h1>
-          <button 
-            className="clear-button"
-            onClick={() => setShowConfirmClear(true)}
+          <div className="view-controls">
+            <button 
+              className={`view-btn ${viewMode === 'local' ? 'active' : ''}`}
+              onClick={() => setViewMode('local')}
+            >
+              📱 Local
+            </button>
+            <button 
+              className={`view-btn ${viewMode === 'database' ? 'active' : ''}`}
+              onClick={() => setViewMode('database')}
+            >
+              ☁️ Base de Datos
+            </button>
+          </div>
+          <button
+            className="view-btn"
+            style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', background: '#7eaaff', color: 'white', fontWeight: 700 }}
+            onClick={() => navigate('/teacher-panel')}
           >
-            🗑️ Limpiar Datos
+            <FaUserLock /> Panel del Profesor
           </button>
+          <button className="export-pdf-btn" onClick={handleExportPDF}>
+            📄 Exportar a PDF
+          </button>
+          {viewMode === 'local' && (
+            <button 
+              className="clear-button"
+              onClick={() => setShowConfirmClear(true)}
+            >
+              🗑️ Limpiar Datos
+            </button>
+          )}
         </div>
 
         {/* Resumen General */}
@@ -78,23 +202,27 @@ const Statistics = () => {
           <div className="summary-grid">
             <div className="summary-card">
               <div className="summary-icon">🎮</div>
-              <div className="summary-value">{summary.totalGames}</div>
+              <div className="summary-value">{currentSummary.totalGames}</div>
               <div className="summary-label">Juegos Jugados</div>
             </div>
             <div className="summary-card">
               <div className="summary-icon">⏱️</div>
-              <div className="summary-value">{formatTime(summary.totalTime)}</div>
+              <div className="summary-value">{formatTime(currentSummary.totalTime)}</div>
               <div className="summary-label">Tiempo Total</div>
             </div>
             <div className="summary-card">
               <div className="summary-icon">🏆</div>
-              <div className="summary-value">{summary.totalScore}</div>
+              <div className="summary-value">{currentSummary.totalScore}</div>
               <div className="summary-label">Puntuación Total</div>
             </div>
             <div className="summary-card">
-              <div className="summary-icon">🔥</div>
-              <div className="summary-value">{summary.streak}</div>
-              <div className="summary-label">Días Seguidos</div>
+              <div className="summary-icon">📊</div>
+              <div className="summary-value">
+                {currentSummary.totalGames > 0 
+                  ? Math.round(currentSummary.totalScore / currentSummary.totalGames) 
+                  : 0}
+              </div>
+              <div className="summary-label">Promedio</div>
             </div>
           </div>
         </motion.div>
@@ -108,56 +236,95 @@ const Statistics = () => {
         >
           <h2>🎮 Estadísticas por Juego</h2>
           <div className="games-grid">
-            {Object.entries(summary.games).map(([gameName, gameStats]) => (
-              <motion.div
-                key={gameName}
-                className="game-stats-card"
-                whileHover={{ scale: 1.02 }}
-                onClick={() => setSelectedGame(selectedGame === gameName ? null : gameName)}
-              >
-                <h3>{getGameDisplayName(gameName)}</h3>
-                <div className="game-stats-summary">
-                  <div className="stat-item">
-                    <span className="stat-label">Juegos:</span>
-                    <span className="stat-value">{gameStats.totalGames}</span>
+            {Object.entries(currentSummary.games).map(([gameName, gameStats]) => {
+              const { avgMistakes, avgWpm, avgAccuracy } = getExtraMetrics(gameName, dbStats);
+              return (
+                <motion.div
+                  key={gameName}
+                  className="game-stats-card"
+                  whileHover={{ scale: 1.02 }}
+                  onClick={() => setSelectedGame(selectedGame === gameName ? null : gameName)}
+                >
+                  <h3>{getGameDisplayName(gameName)}</h3>
+                  <div className="game-stats-summary">
+                    <div className="stat-item">
+                      <span className="stat-label">Juegos:</span>
+                      <span className="stat-value">{gameStats.totalGames}</span>
+                    </div>
+                    <div className="stat-item">
+                      <span className="stat-label">Mejor:</span>
+                      <span className="stat-value">{gameStats.bestScore}</span>
+                    </div>
+                    <div className="stat-item">
+                      <span className="stat-label">Promedio:</span>
+                      <span className="stat-value">{gameStats.averageScore}</span>
+                    </div>
                   </div>
-                  <div className="stat-item">
-                    <span className="stat-label">Mejor:</span>
-                    <span className="stat-value">{gameStats.bestScore}</span>
-                  </div>
-                  <div className="stat-item">
-                    <span className="stat-label">Promedio:</span>
-                    <span className="stat-value">{gameStats.averageScore}</span>
-                  </div>
-                </div>
-                {selectedGame === gameName && (
-                  <motion.div
-                    className="detailed-stats"
-                    initial={{ opacity: 0, height: 0 }}
-                    animate={{ opacity: 1, height: 'auto' }}
-                    exit={{ opacity: 0, height: 0 }}
-                  >
-                    <DetailedGameStats gameName={gameName} />
-                  </motion.div>
-                )}
-              </motion.div>
-            ))}
+                  {/* Métricas extra */}
+                  {gameName === 'typingGame' && (
+                    <div className="extra-metric">
+                      <span>Avg. WPM: {avgWpm}</span>
+                    </div>
+                  )}
+                  {gameName === 'memoryGame' && (
+                    <div className="extra-metric">
+                      <span>Avg. Accuracy: {avgAccuracy}%</span>
+                    </div>
+                  )}
+                  {avgMistakes !== 'N/A' && (
+                    <div className="extra-metric">
+                      <span>Avg. Mistakes: {avgMistakes}</span>
+                    </div>
+                  )}
+                  {selectedGame === gameName && (
+                    <motion.div
+                      className="detailed-stats"
+                      initial={{ opacity: 0, height: 0 }}
+                      animate={{ opacity: 1, height: 'auto' }}
+                      exit={{ opacity: 0, height: 0 }}
+                    >
+                      <DetailedGameStats 
+                        gameName={gameName} 
+                        viewMode={viewMode}
+                        dbStats={dbStats}
+                      />
+                    </motion.div>
+                  )}
+                </motion.div>
+              );
+            })}
           </div>
         </motion.div>
 
-        {/* Juego Favorito */}
-        {summary.favoriteGame && (
+        {/* Mejores Puntuaciones (solo en modo base de datos) */}
+        {viewMode === 'database' && dbStats.length > 0 && (
           <motion.div 
-            className="favorite-game"
+            className="top-scores-section"
             initial={{ opacity: 0, scale: 0.9 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ delay: 0.6 }}
           >
-            <h2>❤️ Tu Juego Favorito</h2>
-            <div className="favorite-game-card">
-              <div className="favorite-icon">🎯</div>
-              <h3>{getGameDisplayName(summary.favoriteGame)}</h3>
-              <p>¡Has jugado este juego más que cualquier otro!</p>
+            <h2>🏆 Mejores Puntuaciones</h2>
+            <div className="top-scores-grid">
+              {dbStats
+                .sort((a, b) => (b.score || 0) - (a.score || 0))
+                .slice(0, 10)
+                .map((stat, index) => (
+                  <motion.div
+                    key={stat.id}
+                    className="top-score-card"
+                    initial={{ opacity: 0, x: -20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ delay: 0.1 * index }}
+                  >
+                    <div className="rank">#{index + 1}</div>
+                    <div className="score-info">
+                      <div className="game-name">{getGameDisplayName(stat.game_type)}</div>
+                      <div className="score">{stat.score || 0} pts</div>
+                      <div className="date">{formatDate(stat.created_at)}</div>
+                    </div>
+                  </motion.div>
+                ))}
             </div>
           </motion.div>
         )}
@@ -179,7 +346,7 @@ const Statistics = () => {
               exit={{ scale: 0.8, opacity: 0 }}
             >
               <h3>⚠️ ¿Estás seguro?</h3>
-              <p>Esto eliminará todos tus datos de progreso y no se puede deshacer.</p>
+              <p>Esto eliminará todos tus datos de progreso local y no se puede deshacer.</p>
               <div className="modal-buttons">
                 <button onClick={handleClearProgress} className="confirm-btn">
                   Sí, eliminar todo
@@ -197,23 +364,53 @@ const Statistics = () => {
 };
 
 // Componente para estadísticas detalladas de un juego
-const DetailedGameStats = ({ gameName }) => {
+const DetailedGameStats = ({ gameName, viewMode, dbStats }) => {
   const [detailedStats, setDetailedStats] = useState({});
 
   useEffect(() => {
-    // Aquí podrías cargar estadísticas más detalladas por tema
-    const stats = {};
-    const themes = ['fruits', 'animals', 'colors', 'shapes', 'emotions', 'family', 'bodyParts', 'days', 'months', 'seasons'];
-    
-    themes.forEach(theme => {
-      const themeStats = getGameStats(gameName, theme);
-      if (themeStats && themeStats.gamesPlayed > 0) {
-        stats[theme] = themeStats;
-      }
-    });
-    
-    setDetailedStats(stats);
-  }, [gameName]);
+    if (viewMode === 'local') {
+      // Estadísticas locales por tema
+      const stats = {};
+      const themes = ['fruits', 'animals', 'colors', 'shapes', 'emotions', 'family', 'bodyParts', 'days', 'months', 'seasons'];
+      
+      themes.forEach(theme => {
+        const themeStats = getGameStats(gameName, theme);
+        if (themeStats && themeStats.gamesPlayed > 0) {
+          stats[theme] = themeStats;
+        }
+      });
+      
+      setDetailedStats(stats);
+    } else {
+      // Estadísticas de base de datos por tema
+      const gameStats = dbStats.filter(stat => stat.game_type === gameName);
+      const stats = {};
+      
+      gameStats.forEach(stat => {
+        const theme = stat.theme || 'general';
+        if (!stats[theme]) {
+          stats[theme] = {
+            gamesPlayed: 0,
+            totalScore: 0,
+            bestScore: 0,
+            averageScore: 0
+          };
+        }
+        stats[theme].gamesPlayed++;
+        stats[theme].totalScore += stat.score || 0;
+        stats[theme].bestScore = Math.max(stats[theme].bestScore, stat.score || 0);
+      });
+
+      // Calcular promedios
+      Object.keys(stats).forEach(theme => {
+        stats[theme].averageScore = Math.round(
+          stats[theme].totalScore / stats[theme].gamesPlayed
+        );
+      });
+      
+      setDetailedStats(stats);
+    }
+  }, [gameName, viewMode, dbStats]);
 
   const getThemeDisplayName = (theme) => {
     const names = {
@@ -226,7 +423,8 @@ const DetailedGameStats = ({ gameName }) => {
       bodyParts: 'Partes del Cuerpo',
       days: 'Días de la Semana',
       months: 'Meses del Año',
-      seasons: 'Estaciones'
+      seasons: 'Estaciones',
+      general: 'General'
     };
     return names[theme] || theme;
   };
@@ -256,6 +454,30 @@ const DetailedGameStats = ({ gameName }) => {
       ))}
     </div>
   );
+};
+
+// Agregar función para calcular métricas extra por juego
+const getExtraMetrics = (gameType, dbStats) => {
+  const stats = dbStats.filter(stat => stat.game_type === gameType);
+
+  // Promedio de errores
+  const avgMistakes = stats.length
+    ? (stats.reduce((sum, stat) => sum + (stat.mistakes || 0), 0) / stats.length).toFixed(2)
+    : 'N/A';
+
+  // Promedio de WPM (solo TypingGame)
+  const wpmStats = stats.filter(stat => stat.wpm !== null && stat.wpm !== undefined);
+  const avgWpm = wpmStats.length && gameType === 'typingGame'
+    ? (wpmStats.reduce((sum, stat) => sum + (stat.wpm || 0), 0) / wpmStats.length).toFixed(2)
+    : 'N/A';
+
+  // Promedio de Accuracy (solo MemoryGame)
+  const accStats = stats.filter(stat => stat.accuracy !== null && stat.accuracy !== undefined);
+  const avgAccuracy = accStats.length && gameType === 'memoryGame'
+    ? (accStats.reduce((sum, stat) => sum + (stat.accuracy || 0), 0) / accStats.length).toFixed(2)
+    : 'N/A';
+
+  return { avgMistakes, avgWpm, avgAccuracy };
 };
 
 export default Statistics; 

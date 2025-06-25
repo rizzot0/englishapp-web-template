@@ -19,6 +19,10 @@ Una aplicación web interactiva para aprender inglés de forma divertida a trav�
 - **CSS3** con efectos modernos
 - **Service Workers** para funcionalidad offline
 - **Web Audio API** para efectos de sonido
+- **Supabase** para almacenamiento de estadísticas y progreso
+- **xlsx** para exportar a Excel
+- **jspdf** y **html2canvas** para exportar a PDF
+- **react-icons** para iconografía moderna
 
 ## 📦 Instalación Local
 
@@ -28,6 +32,9 @@ git clone [URL_DEL_REPOSITORIO]
 
 # Instalar dependencias
 npm install
+
+# Instalar dependencias adicionales para exportación y panel de profesor
+npm install xlsx jspdf html2canvas react-icons
 
 # Ejecutar en modo desarrollo
 npm run dev
@@ -60,6 +67,9 @@ npm run build
 - **Sistema de Audio**: Música de fondo y efectos de sonido
 - **Modo Oscuro/Claro**: Tema personalizable
 - **Estadísticas**: Seguimiento del progreso del usuario
+- **Filtros avanzados**: Filtra estadísticas por juego, tema y fecha
+- **Exportación de datos**: Exporta estadísticas y gráficos a PDF y Excel
+- **Panel del Profesor**: Acceso protegido con login, visualización y exportación de datos avanzados
 - **PWA**: Funcionalidad offline y instalación como app
 
 ## 📱 PWA Features
@@ -99,6 +109,18 @@ La aplicación incluye un sistema completo de seguimiento de progreso:
 - Tiempo total de juego
 - Días consecutivos jugando
 - Mejores puntuaciones
+- **Métricas avanzadas**: WPM, accuracy, errores promedio
+- **Filtros**: por juego, tema y fecha
+- **Exportación**: a PDF y Excel (datos y gráficos)
+- **Panel del Profesor**: acceso a estadísticas globales y exportación
+
+## 🧑‍🏫 Panel del Profesor
+
+- Acceso protegido por contraseña (por defecto: `profesor123`)
+- Visualización de gráficos de rendimiento general
+- Filtros avanzados por juego, tema y fecha
+- Exportación de datos y gráficos a PDF/Excel
+- Acceso desde la página de estadísticas mediante botón dedicado
 
 ## 🎵 Sistema de Audio
 
@@ -109,11 +131,11 @@ La aplicación incluye un sistema completo de seguimiento de progreso:
 
 ## 🌟 Próximas Mejoras
 
+- [x] Exportación de estadísticas
 - [ ] Sistema de niveles de dificultad
 - [ ] Modo multijugador local
 - [ ] Más temáticas educativas
 - [ ] Sistema de logros y badges
-- [ ] Exportación de estadísticas
 - [ ] Modo offline mejorado
 
 ## 📄 Licencia
@@ -126,4 +148,4 @@ Las contribuciones son bienvenidas. Por favor, abre un issue o pull request.
 
 ---
 
-**EnglishApp** - Aprende inglés de forma divertida y efectiva! 🎓🎮 
+**EnglishApp** - ¡Aprende inglés de forma divertida y efectiva! 🎓🎮 

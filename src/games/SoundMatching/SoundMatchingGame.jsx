@@ -5,6 +5,7 @@ import { Howl } from 'howler';
 import './SoundMatchingGame.css';
 import { loadSound, playSound } from '../../utils/soundManager';
 import { speak } from '../../utils/speechSynthesis';
+import { gameStatsAPI } from '../../utils/supabase';
 
 // Cambiamos el nombre para que sea más genérico
 const themeData = {
@@ -40,6 +41,7 @@ export default function SoundMatchingGame() {
   const [gameEnded, setGameEnded] = useState(false);
   const [questionsAnswered, setQuestionsAnswered] = useState(0);
   const [timer, setTimer] = useState(60);
+  const [savingStats, setSavingStats] = useState(false);
 
   const shuffle = (arr) => [...arr].sort(() => Math.random() - 0.5);
 
@@ -147,6 +149,45 @@ export default function SoundMatchingGame() {
 
   const timeProgress = ((GAME_DURATION - timeLeft) / GAME_DURATION) * 100;
   
+  // Guardar estadísticas en Supabase
+  const saveStatsToDatabase = async () => {
+    try {
+      setSavingStats(true);
+      const gameData = {
+        game_type: 'soundMatchingGame',
+        theme: theme,
+        score: score,
+        duration: GAME_DURATION - timeLeft,
+        mistakes: null,
+        correct_answers: score,
+        total_questions: questionsAnswered,
+        difficulty: 'normal',
+        player_name: 'Estudiante',
+        wpm: null,
+        accuracy: null
+      };
+      console.log('Intentando guardar en Supabase:', gameData);
+      const result = await gameStatsAPI.saveGameStats(gameData);
+      console.log('Respuesta de Supabase:', result);
+      if (result.success) {
+        console.log('Estadísticas guardadas en la base de datos');
+      } else {
+        console.error('Error guardando estadísticas:', result.error);
+      }
+    } catch (error) {
+      console.error('Error guardando estadísticas en la base de datos:', error);
+    } finally {
+      setSavingStats(false);
+    }
+  };
+
+  useEffect(() => {
+    if (gameEnded) {
+      saveStatsToDatabase();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [gameEnded]);
+
   if (!question && !gameEnded) {
     return <div>Loading game...</div>;
   }
@@ -217,47 +258,30 @@ export default function SoundMatchingGame() {
 
       <AnimatePresence>
         {gameEnded && (
-          <motion.div 
-            className="game-over-modal"
-            initial={{ opacity: 0, scale: 0.8 }}
-            animate={{ opacity: 1, scale: 1 }}
-            exit={{ opacity: 0, scale: 0.8 }}
-            transition={{ duration: 0.5 }}
-          >
+          <motion.div className="sound-end-modal">
             <div className="modal-content">
-              <h2>🎉 Game Over! 🎉</h2>
-              
+              <h2>⏰ Time's Up!</h2>
               <div className="final-stats">
                 <div className="stat-row">
                   <span className="stat-label-final">Final Score:</span>
-                  <span className="stat-value-final final-score">{score}</span>
+                  <span className="stat-value-final">{score}</span>
                 </div>
                 <div className="stat-row">
-                  <span className="stat-label-final">Questions Answered:</span>
+                  <span className="stat-label-final">Questions:</span>
                   <span className="stat-value-final">{questionsAnswered}</span>
                 </div>
-                <div className="stat-row">
-                  <span className="stat-label-final">Accuracy:</span>
-                  <span className="stat-value-final">{questionsAnswered > 0 ? Math.round((score / questionsAnswered) * 100) : 0}%</span>
-                </div>
+                {savingStats && (
+                  <div className="stat-row saving-stats">
+                    <span className="stat-label-final">💾 Guardando estadísticas...</span>
+                  </div>
+                )}
               </div>
-
               <div className="modal-buttons">
-                <motion.button
-                  onClick={handlePlayAgain}
-                  className="play-again-btn"
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
-                >
-                  🎮 Play Again
+                <motion.button onClick={handlePlayAgain} className="play-again-btn">
+                  Play Again
                 </motion.button>
-                <motion.button
-                  onClick={handleBackToMenu}
-                  className="menu-btn"
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
-                >
-                  🏠 Back to Menu
+                <motion.button onClick={handleBackToMenu} className="menu-btn">
+                  Back to Menu
                 </motion.button>
               </div>
             </div>

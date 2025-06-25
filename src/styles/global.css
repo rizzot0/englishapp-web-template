@@ -1,28 +1,26 @@
 /* Variables CSS para temas */
 :root {
-  /* Colores modo claro */
-  --bg-primary: #fdfcdc;
-  --bg-secondary: #fed9b7;
-  --bg-accent: #f07167;
-  --text-primary: #333;
-  --text-secondary: #0081a7;
-  --card-bg: rgba(255, 255, 255, 0.1);
-  --card-border: rgba(255, 255, 255, 0.2);
-  --shadow-light: rgba(0, 0, 0, 0.1);
-  --shadow-medium: rgba(0, 0, 0, 0.2);
-  --shadow-heavy: rgba(0, 0, 0, 0.3);
-  --button-gradient: linear-gradient(135deg, #f07167 0%, #fed9b7 100%);
-  --particle-color: rgba(0, 129, 167, 0.6);
-  --scrollbar-bg: rgba(255, 255, 255, 0.1);
-  --scrollbar-thumb: linear-gradient(135deg, #f07167, #00afb9);
+  /* Colores modo claro - Azul pastel y lavanda */
+  --bg-primary: #f5f7fa; /* azul muy claro */
+  --bg-secondary: #ede7f6; /* lavanda muy claro */
+  --bg-accent: #b39ddb; /* lavanda pastel */
+  --text-primary: #333366; /* azul oscuro */
+  --text-secondary: #7f9cf5; /* azul lavanda */
+  --card-bg: #ffffffcc; /* blanco translúcido */
+  --card-border: #d6d6f2; /* lavanda grisáceo */
+  --shadow-light: rgba(127, 156, 245, 0.08);
+  --shadow-medium: rgba(127, 156, 245, 0.18);
+  --shadow-heavy: rgba(127, 156, 245, 0.28);
+  --button-gradient: linear-gradient(135deg, #b39ddb 0%, #90caf9 100%);
+  --particle-color: rgba(127, 156, 245, 0.18);
+  --scrollbar-bg: #ede7f6;
+  --scrollbar-thumb: linear-gradient(135deg, #b39ddb, #90caf9);
   --icon-filter: invert(0%);
-  --ui-background-color: rgba(255, 255, 255, 0.8);
-  --ui-background-color-translucent: rgba(255, 255, 255, 0.6);
-  --primary-color: #f07167; /* Usada por los sliders */
-
-  /* Variables para los sliders de volumen */
-  --slider-track-color: #e0e0e0;
-  --slider-thumb-border-color: #ffffff;
+  --ui-background-color: #f5f7faee;
+  --ui-background-color-translucent: #f5f7fa99;
+  --primary-color: #7f9cf5;
+  --slider-track-color: #d6d6f2;
+  --slider-thumb-border-color: #ede7f6;
 }
 
 .dark-mode {

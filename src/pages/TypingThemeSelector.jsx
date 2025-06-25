@@ -16,7 +16,7 @@ export default function TypingThemeSelector() {
 
   const handleStart = () => {
     if (theme) {
-      navigate(`/typing?theme=${theme}`);
+      navigate(`/typing-difficulty?theme=${theme}`);
     }
   };
 

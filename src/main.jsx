@@ -26,6 +26,8 @@ import IdentificationThemeSelector from './pages/IdentificationThemeSelector.jsx
 import IdentificationGame from './games/IdentificationGame/IdentificationGame.jsx';
 import Statistics from './pages/Statistics.jsx';
 import AssetPreloader from './components/AssetPreloader.jsx';
+import TeacherPanel from './pages/TeacherPanel.jsx';
+import TypingDifficultySelector from './pages/TypingDifficultySelector.jsx';
 
 // Componente para registrar el service worker
 const ServiceWorkerRegistration = () => {
@@ -56,6 +58,7 @@ const App = () => {
           <Route path="/memory" element={<MemoryGame />} />
           <Route path="/typing-theme" element={<TypingThemeSelector />} />
           <Route path="/typing" element={<TypingGame />} />
+          <Route path="/typing-difficulty" element={<TypingDifficultySelector />} />
           <Route path="/math-theme" element={<MathThemeSelector />} />
           <Route path="/math" element={<MathGame />} />
           <Route path="/sorting-theme" element={<SortingThemeSelector />} />
@@ -66,6 +69,7 @@ const App = () => {
           <Route path="/identification-game" element={<IdentificationGame />} />
           <Route path="/instructions" element={<Instructions />} />
           <Route path="/statistics" element={<Statistics />} />
+          <Route path="/teacher-panel" element={<TeacherPanel />} />
         </Routes>
       </BrowserRouter>
     </ThemeProvider>

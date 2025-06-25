@@ -76,6 +76,20 @@
   color: #4CAF50;
 }
 
+.memory-stats .saving {
+  animation: pulse 1.5s ease-in-out infinite;
+}
+
+.memory-stats .saving span {
+  color: var(--bg-accent);
+  font-size: 0.8rem;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.6; }
+}
+
 /* Responsive grid layout */
 .grid {
   display: grid;
@@ -252,26 +266,35 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 0.5rem;
-  padding: 0.5rem 0;
+  padding: 0.8rem 1rem;
+  border-bottom: 1px solid var(--card-border);
+  transition: background-color 0.3s;
 }
 
 .stat-row:last-child {
-  margin-bottom: 0;
-  border-top: 1px solid var(--card-border);
-  padding-top: 1rem;
+  border-bottom: none;
+}
+
+.stat-row:hover {
+    background-color: rgba(255, 255, 255, 0.1);
 }
 
 .stat-label-final {
   color: var(--text-secondary);
-  font-weight: bold;
-  font-size: 1rem;
+  font-size: 1.1rem;
+  font-weight: 700;
+  text-shadow: 1px 1px 3px var(--shadow-light);
 }
 
 .stat-value-final {
-  color: var(--bg-accent);
-  font-weight: bold;
+  color: var(--text-primary);
   font-size: 1.2rem;
+  font-weight: bold;
+  background: var(--button-gradient);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  text-shadow: 2px 2px 4px var(--shadow-medium);
 }
 
 .end-screen-buttons {
@@ -297,6 +320,18 @@
 .end-screen-buttons button:hover {
   transform: translateY(-3px);
   box-shadow: 0 8px 25px var(--shadow-heavy);
+}
+
+.saving-stats {
+  background: rgba(0, 175, 185, 0.1);
+  border-radius: 10px;
+  padding: 0.5rem;
+  margin-top: 0.5rem;
+}
+
+.saving-stats .stat-label-final {
+  color: var(--bg-accent);
+  font-size: 0.9rem;
 }
 
 /* Responsive */

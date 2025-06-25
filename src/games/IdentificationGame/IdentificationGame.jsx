@@ -2,6 +2,7 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { loadSound, playSound } from '../../utils/soundManager';
+import { gameStatsAPI } from '../../utils/supabase';
 import './IdentificationGame.css';
 
 const gameThemes = {
@@ -78,6 +79,7 @@ export default function IdentificationGame() {
   const [timeLeft, setTimeLeft] = useState(60);
   const [gameEnded, setGameEnded] = useState(false);
   const [feedback, setFeedback] = useState({ show: false, correct: false, selected: null });
+  const [savingStats, setSavingStats] = useState(false);
 
   const generateQuestion = useCallback(() => {
     setFeedback({ show: false, correct: false, selected: null });
@@ -145,6 +147,45 @@ export default function IdentificationGame() {
 
   const formatTime = (seconds) => `${Math.floor(seconds / 60)}:${(seconds % 60).toString().padStart(2, '0')}`;
 
+  // Guardar estadísticas en Supabase
+  const saveStatsToDatabase = async () => {
+    try {
+      setSavingStats(true);
+      const gameData = {
+        game_type: 'identificationGame',
+        theme: theme,
+        score: score,
+        duration: 60 - timeLeft,
+        mistakes: null,
+        correct_answers: score,
+        total_questions: null,
+        difficulty: 'normal',
+        player_name: 'Estudiante',
+        wpm: null,
+        accuracy: null
+      };
+      console.log('Intentando guardar en Supabase:', gameData);
+      const result = await gameStatsAPI.saveGameStats(gameData);
+      console.log('Respuesta de Supabase:', result);
+      if (result.success) {
+        console.log('Estadísticas guardadas en la base de datos');
+      } else {
+        console.error('Error guardando estadísticas:', result.error);
+      }
+    } catch (error) {
+      console.error('Error guardando estadísticas en la base de datos:', error);
+    } finally {
+      setSavingStats(false);
+    }
+  };
+
+  useEffect(() => {
+    if (gameEnded) {
+      saveStatsToDatabase();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [gameEnded]);
+
   return (
     <div className="identification-game">
       <div className="typing-stats"> {/* Reutilizamos clases de CSS */}
@@ -202,14 +243,19 @@ export default function IdentificationGame() {
 
       <AnimatePresence>
         {gameEnded && (
-          <motion.div className="game-over-modal">
+          <motion.div className="id-end-modal">
             <div className="modal-content">
-              <h2>🎉 Time's Up!</h2>
+              <h2>⏰ Time's Up!</h2>
               <div className="final-stats">
                 <div className="stat-row">
                   <span className="stat-label-final">Final Score:</span>
                   <span className="stat-value-final">{score}</span>
                 </div>
+                {savingStats && (
+                  <div className="stat-row saving-stats">
+                    <span className="stat-label-final">💾 Guardando estadísticas...</span>
+                  </div>
+                )}
               </div>
               <div className="modal-buttons">
                 <motion.button onClick={handlePlayAgain} className="play-again-btn">

@@ -5,6 +5,7 @@ import { AnimatePresence, motion } from 'framer-motion';
 import './MemoryGame.css';
 import { loadSound, playSound } from '../../utils/soundManager';
 import { saveGameScore, getGameStats } from '../../utils/progressManager';
+import { gameStatsAPI } from '../../utils/supabase';
 
 const themes = {
   fruits: [
@@ -52,6 +53,7 @@ const MemoryGame = () => {
   const [gameStats, setGameStats] = useState(null);
   const [startTime, setStartTime] = useState(null);
   const [gameTime, setGameTime] = useState(0);
+  const [savingStats, setSavingStats] = useState(false);
 
   const totalPairs = (themes[selectedTheme] || []).length;
 
@@ -89,6 +91,41 @@ const MemoryGame = () => {
     prepareGame();
   }, [prepareGame]);
 
+  // Función para guardar estadísticas en Supabase
+  const saveStatsToDatabase = async (score, duration, moves, accuracy) => {
+    try {
+      setSavingStats(true);
+      
+      const gameData = {
+        game_type: 'memoryGame',
+        theme: selectedTheme,
+        score: score,
+        duration: duration,
+        mistakes: moves - totalPairs, // Movimientos incorrectos
+        correct_answers: totalPairs,
+        total_questions: totalPairs,
+        difficulty: 'normal',
+        player_name: 'Estudiante',
+        wpm: null,
+        accuracy: accuracy
+      };
+
+      console.log('Intentando guardar en Supabase:', gameData);
+      const result = await gameStatsAPI.saveGameStats(gameData);
+      console.log('Respuesta de Supabase:', result);
+      
+      if (result.success) {
+        console.log('Estadísticas guardadas en la base de datos');
+      } else {
+        console.error('Error guardando estadísticas:', result.error);
+      }
+    } catch (error) {
+      console.error('Error guardando estadísticas en la base de datos:', error);
+    } finally {
+      setSavingStats(false);
+    }
+  };
+
   useEffect(() => {
     if (totalPairs > 0 && matched.length === totalPairs) {
       const endTime = Date.now();
@@ -99,11 +136,15 @@ const MemoryGame = () => {
         playSound('win.wav');
         setGameWon(true);
         
-        // Guardar progreso
+        // Guardar progreso local
         saveGameScore('memoryGame', selectedTheme, totalPairs, timeElapsed, {
           moves: moves,
           accuracy: Math.round((totalPairs / moves) * 100) || 100
         });
+
+        // Guardar estadísticas en la base de datos
+        const accuracy = Math.round((totalPairs / moves) * 100) || 100;
+        saveStatsToDatabase(totalPairs, timeElapsed, moves, accuracy);
       }, 800);
     }
   }, [matched, totalPairs, moves, startTime, selectedTheme]);
@@ -168,6 +209,11 @@ const MemoryGame = () => {
           <div className="stat-item best-score">
             <span>Best Score:</span>
             <span>{gameStats.bestScore} / {totalPairs}</span>
+          </div>
+        )}
+        {savingStats && (
+          <div className="stat-item saving">
+            <span>💾 Guardando...</span>
           </div>
         )}
       </div>
@@ -257,6 +303,11 @@ const MemoryGame = () => {
                   <div className="stat-row">
                     <span className="stat-label-final">Mejor Puntuación:</span>
                     <span className="stat-value-final">{gameStats.bestScore} / {totalPairs}</span>
+                  </div>
+                )}
+                {savingStats && (
+                  <div className="stat-row saving-stats">
+                    <span className="stat-label-final">💾 Guardando estadísticas...</span>
                   </div>
                 )}
               </div>

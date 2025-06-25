@@ -137,74 +137,82 @@
 }
 
 /* Estilos de modal unificados */
-.game-over-modal {
+.math-end-popup {
   position: fixed;
   top: 0;
   left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(0, 0, 0, 0.6);
+  width: 100vw;
+  height: 100vh;
   display: flex;
   justify-content: center;
   align-items: center;
-  z-index: 1000;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 2000;
   backdrop-filter: blur(8px);
 }
 
-.modal-content {
-  background: linear-gradient(135deg, rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0.8));
-  backdrop-filter: blur(15px);
-  border-radius: 30px;
-  padding: 2rem 3rem;
-  text-align: center;
-  box-shadow: 0 15px 50px rgba(0, 0, 0, 0.3);
-  border: 2px solid rgba(255, 255, 255, 0.4);
-  max-width: 500px;
-  width: 90%;
+.math-end-popup {
+  flex-direction: column;
 }
 
-.modal-content h2 {
-  color: #0081A7;
+.math-end-popup h2 {
+  color: var(--text-secondary);
   font-size: 2.5rem;
   margin-bottom: 1.5rem;
-  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+  text-shadow: 2px 2px 4px var(--shadow-light);
 }
 
-.final-stats {
-  margin: 1.5rem 0;
+.math-end-popup .final-stats-math,
+.math-end-popup .end-screen-buttons-math {
+  width: 100%;
   display: flex;
   flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.math-end-popup .final-stats-math {
+  margin: 1.5rem 0 0.5rem 0;
   gap: 0.8rem;
 }
 
-.stat-row {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 0.5rem 1rem;
-  background: rgba(255, 255, 255, 0.5);
-  border-radius: 15px;
-  font-size: 1.2rem;
-  font-weight: bold;
-}
-
-.stat-label-final {
-  color: #0081A7;
-}
-
-.stat-value-final {
-  color: #F07167;
-  font-size: 1.4rem;
-}
-
-.modal-buttons {
-  display: flex;
+.math-end-popup .end-screen-buttons-math {
+  flex-direction: row;
   gap: 1rem;
-  justify-content: center;
   margin-top: 2rem;
 }
 
-.play-again-btn, .menu-btn {
+.math-end-popup .stat-row-math {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.8rem 1rem;
+  background: rgba(255,255,255,0.1);
+  border-radius: 15px;
+  border-bottom: 1px solid var(--card-border);
+  width: 100%;
+  max-width: 300px;
+}
+
+.math-end-popup .stat-label-final {
+  color: var(--text-secondary);
+  font-size: 1.1rem;
+  font-weight: 700;
+  text-shadow: 1px 1px 3px var(--shadow-light);
+}
+
+.math-end-popup .stat-value-final {
+  color: var(--text-primary);
+  font-size: 1.2rem;
+  font-weight: bold;
+  background: var(--button-gradient);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  text-shadow: 2px 2px 4px var(--shadow-medium);
+}
+
+.math-end-popup button {
   padding: 0.8rem 1.5rem;
   border: none;
   border-radius: 20px;
@@ -215,14 +223,12 @@
   box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
   font-family: 'Comic Sans MS', cursive, sans-serif;
   color: white;
+  background: var(--button-gradient);
 }
 
-.play-again-btn {
-  background: linear-gradient(135deg, #4CAF50, #8BC34A);
-}
-
-.menu-btn {
-  background: linear-gradient(135deg, #F07167, #FED9B7);
+.math-end-popup button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 15px rgba(0,0,0,0.2);
 }
 
 @media (min-width: 768px) {
@@ -264,7 +270,7 @@
   color: white;
 }
 
-.math-game-end-popup button:hover {
+.math-end-popup button:hover {
   transform: translateY(-2px);
   box-shadow: 0 6px 15px rgba(0,0,0,0.2);
 }
@@ -293,6 +299,25 @@
   border-color: var(--text-secondary);
   transform: translateY(-2px);
   box-shadow: 0 6px 15px var(--shadow-medium);
+}
+
+.options-math {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  width: 100%;
+  max-width: 600px;
+  align-items: center;
+  margin: 2rem 0 2.5rem 0;
+}
+
+@media (min-width: 600px) {
+  .options-math {
+    flex-direction: row;
+    gap: 3rem;
+    justify-content: center;
+    align-items: stretch;
+  }
 }
 
 
