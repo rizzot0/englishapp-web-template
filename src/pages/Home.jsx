@@ -10,6 +10,7 @@ import icon_math from '/assets/images/icon_math.png';
 import icon_order from '/assets/images/icon_order.png';
 import icon_sound from '/assets/images/icon_sound.png';
 import icon_eye from '/assets/images/eye.png';
+import logoCA from '/assets/images/CALogo.png';
 
 const games = [
   { name: 'Memory Game', path: '/memory-theme', icon: icon_memory },
@@ -59,7 +60,7 @@ const GameCard = ({ game, index }) => {
 
 export default function Home() {
   return (
-    <div className="home-menu">
+    <div className="home-container">
       <FloatingParticles />
       
       {/* Elementos decorativos */}

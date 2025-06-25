@@ -66,6 +66,21 @@ body {
   overflow-x: hidden;
   transition: all 0.3s ease;
 }
+body::after {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-image: url('/assets/images/CALogo.png');
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: 60vw 60vw;
+  opacity: 0.08;
+  pointer-events: none;
+  z-index: 0;
+}
 
 /* Fondo animado con burbujas */
 body::before {
@@ -372,4 +387,33 @@ button:active {
   font-size: 1.2rem;
   font-weight: bold;
   text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+}
+
+.app-container {
+  position: relative;
+  min-height: 100vh;
+  background: #fdfcdc;
+  /* Eliminar el logo de fondo aquí para evitar duplicidad */
+  /* background-image: url('/assets/images/CALogo.png'); */
+  /* background-repeat: no-repeat; */
+  /* background-position: center; */
+  /* background-size: contain; */
+}
+.app-container::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: rgba(253,252,220,0.7); /* Fondo semitransparente para suavizar el logo */
+  z-index: 1;
+  pointer-events: none;
+}
+.app-container > * {
+  position: relative;
+  z-index: 2;
+}
+
+/* Eliminar fondo de home-container si existía */
+.home-container {
+  background: none !important;
+  background-image: none !important;
 }

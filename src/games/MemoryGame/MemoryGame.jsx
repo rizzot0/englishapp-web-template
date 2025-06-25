@@ -54,6 +54,7 @@ const MemoryGame = () => {
   const [startTime, setStartTime] = useState(null);
   const [gameTime, setGameTime] = useState(0);
   const [savingStats, setSavingStats] = useState(false);
+  const [isPreviewing, setIsPreviewing] = useState(false);
 
   const totalPairs = (themes[selectedTheme] || []).length;
 
@@ -81,10 +82,19 @@ const MemoryGame = () => {
     setIsChecking(false);
     setStartTime(Date.now());
     setGameTime(0);
+    setIsPreviewing(true);
 
     // Cargar estadísticas del tema
     const stats = getGameStats('memoryGame', selectedTheme);
     setGameStats(stats);
+
+    // Mostrar todas las cartas durante 2 segundos
+    setTimeout(() => {
+      setFlipped([]);
+      setIsPreviewing(false);
+    }, 2000);
+    // Voltear todas las cartas al inicio
+    setFlipped(shuffled.map((_, idx) => idx));
   }, [selectedTheme]);
 
   useEffect(() => {
@@ -150,7 +160,7 @@ const MemoryGame = () => {
   }, [matched, totalPairs, moves, startTime, selectedTheme]);
 
   const handleClick = (index) => {
-    if (isChecking || gameWon || flipped.includes(index) || matched.includes(cards[index].id)) {
+    if (isPreviewing || isChecking || gameWon || flipped.includes(index) || matched.includes(cards[index].id)) {
       return;
     }
 

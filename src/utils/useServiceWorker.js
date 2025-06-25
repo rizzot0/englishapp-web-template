@@ -11,6 +11,10 @@ export const useServiceWorker = () => {
           .catch((error) => {
             console.log('Error al registrar SW:', error);
           });
+        // Recargar la página automáticamente cuando hay un nuevo SW
+        navigator.serviceWorker.addEventListener('controllerchange', function() {
+          window.location.reload();
+        });
       });
     }
   }, []);

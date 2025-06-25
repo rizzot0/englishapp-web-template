@@ -19,6 +19,7 @@ const urlsToCache = [
 
 // Evento de instalación: se dispara cuando el SW se instala.
 self.addEventListener('install', event => {
+  self.skipWaiting();
   event.waitUntil(
     caches.open(CACHE_NAME)
       .then(cache => {
@@ -43,6 +44,7 @@ self.addEventListener('fetch', event => {
 // Evento de activación: se dispara cuando el SW se activa.
 // Útil para limpiar cachés antiguos.
 self.addEventListener('activate', event => {
+  clients.claim();
   const cacheWhitelist = [CACHE_NAME];
   event.waitUntil(
     caches.keys().then(cacheNames => {
