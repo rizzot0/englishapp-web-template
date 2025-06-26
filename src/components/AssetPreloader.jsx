@@ -14,18 +14,18 @@ const AssetPreloader = ({ onComplete }) => {
     '/assets/sounds/win.wav',
     
     // Imágenes de iconos principales
-    '/assets/images/icon_memory.png',
-    '/assets/images/icon_typing.png',
-    '/assets/images/icon_math.png',
-    '/assets/images/icon_order.png',
-    '/assets/images/icon_sound.png',
-    '/assets/images/eye.png',
+    '/assets/images/icon_memory.webp',
+    '/assets/images/icon_typing.webp',
+    '/assets/images/icon_math.webp',
+    '/assets/images/icon_order.webp',
+    '/assets/images/icon_soundmatching.webp',
+    '/assets/images/eye.webp',
     
     // Imágenes de frutas (más usadas)
-    '/assets/images/apple.png',
-    '/assets/images/banana.png',
-    '/assets/images/orange.png',
-    '/assets/images/grape.png',
+    '/assets/images/apple.webp',
+    '/assets/images/banana.webp',
+    '/assets/images/orange.webp',
+    '/assets/images/grape.webp',
   ];
 
   useEffect(() => {

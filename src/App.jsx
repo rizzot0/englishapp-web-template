@@ -1,4 +1,4 @@
-import logoCA from '../public/CALogo.png';
+import logoCA from '/assets/images/CALogo.png';
 
 export default function App() {
   return (

@@ -10,18 +10,30 @@ import { gameStatsAPI } from '../../utils/supabase';
 // Cambiamos el nombre para que sea más genérico
 const themeData = {
   animals: [
-    { name: 'dog', image: 'dog.png' },
-    { name: 'cat', image: 'cat.png' },
-    { name: 'lion', image: 'lion.png' },
-    { name: 'zebra', image: 'zebra.png' },
-    { name: 'frog', image: 'frog.png' },
-    { name: 'monkey', image: 'monkey.png' },
+    { name: 'dog', image: 'dog.webp' },
+    { name: 'cat', image: 'cat.webp' },
+    { name: 'lion', image: 'lion.webp' },
+    { name: 'zebra', image: 'zebra.webp' },
+    { name: 'frog', image: 'frog.webp' },
+    { name: 'monkey', image: 'monkey.webp' },
+    { name: 'elephant', image: 'elephant.webp' },
+    { name: 'penguin', image: 'penguin.webp' },
+    { name: 'tiger', image: 'tiger.webp' },
+    { name: 'giraffe', image: 'giraffe.webp' },
+    { name: 'fox', image: 'fox.webp' },
+    { name: 'rabbit', image: 'rabbit.webp' },
+    { name: 'horse', image: 'horse.webp' },
+    { name: 'cow', image: 'cow.webp' },
+    { name: 'pig', image: 'pig.webp' },
+    { name: 'duck', image: 'duck.webp' },
+    { name: 'monkey2', image: 'monkey2.webp' }
   ],
-  objects: [ // Nueva temática con figuras
-    { name: 'circle', image: 'circle.png' },
-    { name: 'square', image: 'square.png' },
-    { name: 'star', image: 'star.png' },
-    { name: 'triangle', image: 'triangle.png' },
+  objects: [
+    { name: 'circle', image: 'circle.webp' },
+    { name: 'square', image: 'square.webp' },
+    { name: 'star', image: 'star.webp' },
+    { name: 'triangle', image: 'triangle.webp' },
+    { name: 'rectangle', image: 'rectangle.webp' }
   ],
 };
 
@@ -233,7 +245,7 @@ export default function SoundMatchingGame() {
                 whileHover={{ scale: 1.1 }}
                 whileTap={{ scale: 0.9 }}
             >
-              🔊 Play Sound
+                <img src="/assets/images/icon_soundmatching.webp" alt="Play Sound" style={{width: '60px', height: '60px'}} />
             </motion.button>
             <p>Listen and choose the correct picture!</p>
           </div>

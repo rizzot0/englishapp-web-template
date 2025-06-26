@@ -4,12 +4,12 @@ import { Link } from 'react-router-dom';
 import './Home.css';
 import { motion } from 'framer-motion';
 import FloatingParticles from '../components/FloatingParticles';
-import icon_memory from '/assets/images/icon_memory.png';
-import icon_typing from '/assets/images/icon_typing.png';
-import icon_math from '/assets/images/icon_math.png';
-import icon_order from '/assets/images/icon_order.png';
-import icon_sound from '/assets/images/icon_sound.png';
-import icon_eye from '/assets/images/eye.png';
+import icon_memory from '/assets/images/icon_memory.webp';
+import icon_typing from '/assets/images/icon_typing.webp';
+import icon_math from '/assets/images/icon_math.webp';
+import icon_order from '/assets/images/icon_order.webp';
+import icon_soundmatching from '/assets/images/icon_soundmatching.webp';
+import icon_eye from '/assets/images/eye.webp';
 import logoCA from '/assets/images/CALogo.png';
 
 const games = [
@@ -17,7 +17,7 @@ const games = [
   { name: 'Typing Game', path: '/typing-theme', icon: icon_typing },
   { name: 'Math Game', path: '/math-theme', icon: icon_math },
   { name: 'Sorting Game', path: '/sorting-theme', icon: icon_order },
-  { name: 'Sound Match', path: '/sound-matching-theme', icon: icon_sound },
+  { name: 'Sound Match', path: '/sound-matching-theme', icon: icon_soundmatching },
   { name: 'Identification Game', path: '/identification-theme', icon: icon_eye }
 ];
 
@@ -89,7 +89,7 @@ export default function Home() {
 
       <div className="game-grid">
         {games.map((game, index) => (
-          <GameCard game={game} index={index} />
+          <GameCard key={game.name} game={game} index={index} />
         ))}
       </div>
 

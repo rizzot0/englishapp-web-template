@@ -9,33 +9,43 @@ import { gameStatsAPI } from '../../utils/supabase';
 
 const themes = {
   fruits: [
-    { word: 'apple', image: 'apple.png' },
-    { word: 'banana', image: 'banana.png' },
-    { word: 'grapes', image: 'grape.png' },
-    { word: 'pear', image: 'pear.png' },
-    { word: 'cherry', image: 'cherry.png' },
-    { word: 'kiwi', image: 'kiwi.png' },
-    { word: 'lemon', image: 'lemon.png' },
-    { word: 'orange', image: 'orange.png' },
+    { word: 'apple', image: 'apple.webp' },
+    { word: 'banana', image: 'banana.webp' },
+    { word: 'grapes', image: 'grape.webp' },
+    { word: 'pear', image: 'pear.webp' },
+    { word: 'cherry', image: 'cherry.webp' },
+    { word: 'kiwi', image: 'kiwi.webp' },
+    { word: 'lemon', image: 'lemon.webp' },
+    { word: 'orange', image: 'orange.webp' },
+    { word: 'blueberry', image: 'blueberry.webp' },
+    { word: 'strawberry', image: 'strawberry.webp' },
+    { word: 'watermelon', image: 'watermelon.webp' },
+    { word: 'coconut', image: 'coconut.webp' },
+    { word: 'rapsberry', image: 'rapsberry.webp' },
+    { word: 'mango', image: 'mango.webp' },
+    { word: 'peach', image: 'peach.webp' },
+    { word: 'pineapple', image: 'pineapple.webp' },
+    { word: 'grape', image: 'grape.webp' }
   ],
   colors: [
-    { word: 'red', image: 'red.png' },
-    { word: 'blue', image: 'blue.png' },
-    { word: 'green', image: 'green.png' },
-    { word: 'yellow', image: 'yellow.png' },
+    { word: 'red', image: 'red.webp' },
+    { word: 'blue', image: 'blue.webp' },
+    { word: 'green', image: 'green.webp' },
+    { word: 'yellow', image: 'yellow.webp' }
   ],
   shapes: [
-    { word: 'circle', image: 'circle.png' },
-    { word: 'square', image: 'square.png' },
-    { word: 'star', image: 'star.png' },
-    { word: 'triangle', image: 'triangle.png' },
+    { word: 'circle', image: 'circle.webp' },
+    { word: 'square', image: 'square.webp' },
+    { word: 'star', image: 'star.webp' },
+    { word: 'triangle', image: 'triangle.webp' },
+    { word: 'rectangle', image: 'rectangle.webp' }
   ],
   emotions: [
-    { word: 'happy', image: 'happy.png' },
-    { word: 'angry', image: 'angry.png' },
-    { word: 'sad', image: 'sad.png' },
-    { word: 'surprised', image: 'surprised.png' },
-  ],
+    { word: 'happy', image: 'happy.webp' },
+    { word: 'angry', image: 'angry.webp' },
+    { word: 'sad', image: 'sad.webp' },
+    { word: 'surprised', image: 'surprised.webp' }
+  ]
 };
 
 const MemoryGame = () => {
@@ -56,7 +66,16 @@ const MemoryGame = () => {
   const [savingStats, setSavingStats] = useState(false);
   const [isPreviewing, setIsPreviewing] = useState(false);
 
-  const totalPairs = (themes[selectedTheme] || []).length;
+  // Función para seleccionar aleatoriamente 6 frutas para cada partida
+  const getRandomFruits = () => {
+    const allFruits = themes.fruits;
+    const shuffled = [...allFruits].sort(() => Math.random() - 0.5);
+    return shuffled.slice(0, 6); // Solo 6 frutas
+  };
+
+  // Obtener las frutas para esta partida
+  const currentFruits = selectedTheme === 'fruits' ? getRandomFruits() : themes[selectedTheme] || themes.fruits;
+  const totalPairs = currentFruits.length;
 
   // Determinar la clase de la cuadrícula según el número de cartas
   const gridLayoutClass = totalPairs <= 4 ? 'grid-8-cards' : 'grid-16-cards';
@@ -66,7 +85,8 @@ const MemoryGame = () => {
     loadSound('correct.wav');
     loadSound('win.wav');
 
-    const pairs = themes[selectedTheme] || themes.fruits;
+    // Usar las frutas seleccionadas aleatoriamente para esta partida
+    const pairs = selectedTheme === 'fruits' ? getRandomFruits() : (themes[selectedTheme] || themes.fruits);
     const mixed = pairs.flatMap(({ word, image }) => [
       { id: word, type: 'word', value: word },
       { id: word, type: 'image', value: image },

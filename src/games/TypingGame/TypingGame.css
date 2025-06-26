@@ -260,6 +260,10 @@
   border-radius: 20px;
   border: 2px solid rgba(255, 255, 255, 0.3);
   box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
 }
 
 .keyboard-row {
@@ -267,6 +271,7 @@
   justify-content: center;
   gap: 0.5rem;
   margin-bottom: 0.5rem;
+  flex-wrap: wrap;
 }
 
 .keyboard-row:last-child {
@@ -314,32 +319,30 @@
 /* Responsive para el teclado virtual */
 @media (max-width: 480px) {
   .virtual-keyboard {
-    padding: 0.8rem;
-    margin: 0.5rem auto;
+    padding: 0.3rem;
+    margin: 0.2rem auto;
+    gap: 0.1rem;
   }
-  
   .keyboard-key {
-    width: 2.2rem;
-    height: 2.2rem;
-    font-size: 1rem;
-    border-radius: 10px;
+    width: 1.7rem;
+    height: 1.7rem;
+    font-size: 0.85rem;
+    border-radius: 7px;
+    margin: 0.05rem;
   }
-  
   .keyboard-row {
-    gap: 0.4rem;
-    margin-bottom: 0.4rem;
+    gap: 0.1rem;
+    margin-bottom: 0.1rem;
   }
 }
 
-@media (max-width: 360px) {
+@media (max-width: 370px) {
   .keyboard-key {
-    width: 2rem;
-    height: 2rem;
-    font-size: 0.9rem;
-  }
-  
-  .keyboard-row {
-    gap: 0.3rem;
+    width: 1.3rem;
+    height: 1.3rem;
+    font-size: 0.7rem;
+    border-radius: 5px;
+    margin: 0.03rem;
   }
 }
 

@@ -7,14 +7,18 @@ import { gameStatsAPI } from '../../utils/supabase';
 import './MathGame.css';
 
 const bodyParts = [ 
-  { name: 'eye', image: 'eye.png' },  
-  { name: 'nose', image: 'nose.png' },
-  { name: 'mouth', image: 'mouth.png' },
+  { name: 'eye', image: 'eye.webp' },  
+  { name: 'nose', image: 'nose.webp' },
+  { name: 'mouth', image: 'mouth.webp' },
   { name: 'ear', image: 'ear.png' },
-  { name: 'head', image: 'head.png' },
-  { name: 'feet', image: 'feet.png' },
-  { name: 'knee', image: 'knee.png' },
-  { name: 'shoulder', image: 'shoulder.png' }
+  { name: 'head', image: 'head.webp' },
+  { name: 'feet', image: 'feet.webp' },
+  { name: 'knee', image: 'knee.webp' },
+  { name: 'shoulder', image: 'shoulder.webp' },
+  { name: 'hand', image: 'hand.webp' },
+  { name: 'leg', image: 'leg.webp' },
+  { name: 'hair', image: 'hair.webp' },
+  { name: 'heart', image: 'heart.webp' }
 ];
 
 const numberWords = [

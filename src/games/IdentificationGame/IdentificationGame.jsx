@@ -8,59 +8,75 @@ import './IdentificationGame.css';
 const gameThemes = {
   bodyParts: {
     data: [
-      { name: 'eye', image: 'eye.png' },
-      { name: 'nose', image: 'nose.png' },
-      { name: 'mouth', image: 'mouth.png' },
+      { name: 'eye', image: 'eye.webp' },
+      { name: 'nose', image: 'nose.webp' },
+      { name: 'mouth', image: 'mouth.webp' },
       { name: 'ear', image: 'ear.png' },
-      { name: 'head', image: 'head.png' },
-      { name: 'feet', image: 'feet.png' },
-      { name: 'knee', image: 'knee.png' },
-      { name: 'shoulder', image: 'shoulder.png' }
+      { name: 'head', image: 'head.webp' },
+      { name: 'feet', image: 'feet.webp' },
+      { name: 'knee', image: 'knee.webp' },
+      { name: 'shoulder', image: 'shoulder.webp' },
+      { name: 'hand', image: 'hand.webp' },
+      { name: 'leg', image: 'leg.webp' },
+      { name: 'hair', image: 'hair.webp' },
+      { name: 'heart', image: 'heart.webp' }
     ],
     questionPrompt: 'What is this?'
   },
   fruits: {
     data: [
-      { name: 'apple', image: 'apple.png' },
-      { name: 'banana', image: 'banana.png' },
-      { name: 'cherry', image: 'cherry.png' },
-      { name: 'grape', image: 'grape.png' },
-      { name: 'kiwi', image: 'kiwi.png' },
-      { name: 'lemon', image: 'lemon.png' },
-      { name: 'mango', image: 'mango.png' },
-      { name: 'orange', image: 'orange.png' },
-      { name: 'peach', image: 'peach.png' },
-      { name: 'pear', image: 'pear.png' },
-      { name: 'pineapple', image: 'pineapple.png' }
+      { name: 'apple', image: 'apple.webp' },
+      { name: 'banana', image: 'banana.webp' },
+      { name: 'cherry', image: 'cherry.webp' },
+      { name: 'grape', image: 'grape.webp' },
+      { name: 'kiwi', image: 'kiwi.webp' },
+      { name: 'lemon', image: 'lemon.webp' },
+      { name: 'mango', image: 'mango.webp' },
+      { name: 'orange', image: 'orange.webp' },
+      { name: 'peach', image: 'peach.webp' },
+      { name: 'pear', image: 'pear.webp' },
+      { name: 'pineapple', image: 'pineapple.webp' },
+      { name: 'blueberry', image: 'blueberry.webp' },
+      { name: 'strawberry', image: 'strawberry.webp' },
+      { name: 'watermelon', image: 'watermelon.webp' },
+      { name: 'coconut', image: 'coconut.webp' },
+      { name: 'rapsberry', image: 'rapsberry.webp' }
     ],
     questionPrompt: 'What fruit is this?'
   },
   animals: {
     data: [
-      { name: 'cat', image: 'cat.png' },
-      { name: 'dog', image: 'dog.png' },
-      { name: 'elephant', image: 'elephant.png' },
-      { name: 'fish', image: 'fish.png' },
-      { name: 'frog', image: 'frog.png' },
-      { name: 'giraffe', image: 'giraffe.png' },
-      { name: 'lion', image: 'lion.png' },
-      { name: 'monkey', image: 'monkey.png' },
-      { name: 'penguin', image: 'penguin.png' },
-      { name: 'tiger', image: 'tiger.png' },
-      { name: 'zebra', image: 'zebra.png' }
+      { name: 'cat', image: 'cat.webp' },
+      { name: 'dog', image: 'dog.webp' },
+      { name: 'elephant', image: 'elephant.webp' },
+      { name: 'fish', image: 'fish.webp' },
+      { name: 'frog', image: 'frog.webp' },
+      { name: 'giraffe', image: 'giraffe.webp' },
+      { name: 'lion', image: 'lion.webp' },
+      { name: 'monkey', image: 'monkey.webp' },
+      { name: 'penguin', image: 'penguin.webp' },
+      { name: 'tiger', image: 'tiger.webp' },
+      { name: 'zebra', image: 'zebra.webp' },
+      { name: 'horse', image: 'horse.webp' },
+      { name: 'cow', image: 'cow.webp' },
+      { name: 'pig', image: 'pig.webp' },
+      { name: 'fox', image: 'fox.webp' },
+      { name: 'rabbit', image: 'rabbit.webp' },
+      { name: 'duck', image: 'duck.webp' },
+      { name: 'monkey2', image: 'monkey2.webp' }
     ],
     questionPrompt: 'What animal is this?'
   },
   family: {
     data: [
-      { name: 'aunt', image: 'aunt.png' },
-      { name: 'brother', image: 'brother.png' },
-      { name: 'father', image: 'father.png' },
-      { name: 'grandma', image: 'grandma.png' },
-      { name: 'grandpa', image: 'grandpa.png' },
-      { name: 'mother', image: 'mother.png' },
-      { name: 'sister', image: 'sister.png' },
-      { name: 'uncle', image: 'uncle.png' }
+      { name: 'aunt', image: 'aunt.webp' },
+      { name: 'brother', image: 'brother.webp' },
+      { name: 'father', image: 'father.webp' },
+      { name: 'grandma', image: 'grandma.webp' },
+      { name: 'grandpa', image: 'grandpa.webp' },
+      { name: 'mother', image: 'mother.webp' },
+      { name: 'sister', image: 'sister.webp' },
+      { name: 'uncle', image: 'uncle.webp' }
     ],
     questionPrompt: 'Who is this?'
   }
