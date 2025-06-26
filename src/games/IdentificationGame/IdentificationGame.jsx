@@ -82,7 +82,14 @@ const gameThemes = {
   }
 };
 
-export default function IdentificationGame() {
+export default function IdentificationGame({
+  setIntervalFn = setInterval,
+  clearIntervalFn = clearInterval,
+  setTimeoutFn = setTimeout,
+  initialTime = 60,
+  disableTimer = false,
+  disableTimeouts = false
+} = {}) {
   const location = useLocation();
   const navigate = useNavigate();
   const params = new URLSearchParams(location.search);
@@ -92,7 +99,7 @@ export default function IdentificationGame() {
   const [question, setQuestion] = useState({ image: null, answer: '' });
   const [options, setOptions] = useState([]);
   const [score, setScore] = useState(0);
-  const [timeLeft, setTimeLeft] = useState(60);
+  const [timeLeft, setTimeLeft] = useState(initialTime);
   const [gameEnded, setGameEnded] = useState(false);
   const [feedback, setFeedback] = useState({ show: false, correct: false, selected: null });
   const [savingStats, setSavingStats] = useState(false);
@@ -119,11 +126,11 @@ export default function IdentificationGame() {
   }, [generateQuestion]);
 
   useEffect(() => {
-    if (gameEnded) return;
-    const timer = setInterval(() => {
+    if (disableTimer || gameEnded) return;
+    const timer = setIntervalFn(() => {
       setTimeLeft(prev => {
         if (prev <= 1) {
-          clearInterval(timer);
+          clearIntervalFn(timer);
           setGameEnded(true);
           playSound('win.wav');
           return 0;
@@ -131,8 +138,8 @@ export default function IdentificationGame() {
         return prev - 1;
       });
     }, 1000);
-    return () => clearInterval(timer);
-  }, [gameEnded]);
+    return () => clearIntervalFn(timer);
+  }, [gameEnded, disableTimer]);
 
   const handleOptionClick = (selectedOption) => {
     if (feedback.show) return;
@@ -147,16 +154,18 @@ export default function IdentificationGame() {
       playSound('incorrect.wav');
     }
 
-    setTimeout(() => {
-      if (!gameEnded) {
-        generateQuestion();
-      }
-    }, 1200);
+    if (!disableTimeouts) {
+      setTimeoutFn(() => {
+        if (!gameEnded) {
+          generateQuestion();
+        }
+      }, 1200);
+    }
   };
   
   const handlePlayAgain = () => {
     setScore(0);
-    setTimeLeft(60);
+    setTimeLeft(initialTime);
     setGameEnded(false);
     generateQuestion();
   };
@@ -171,7 +180,7 @@ export default function IdentificationGame() {
         game_type: 'identificationGame',
         theme: theme,
         score: score,
-        duration: 60 - timeLeft,
+        duration: initialTime - timeLeft,
         mistakes: null,
         correct_answers: score,
         total_questions: null,
@@ -211,7 +220,7 @@ export default function IdentificationGame() {
       <div className="timer-bar-container">
         <motion.div 
           className="timer-bar"
-          animate={{ width: `${(timeLeft / 60) * 100}%` }}
+          animate={{ width: `${(timeLeft / initialTime) * 100}%` }}
           transition={{ duration: 1, ease: "linear" }}
         />
       </div>

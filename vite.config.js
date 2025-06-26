@@ -32,5 +32,23 @@ export default defineConfig({
     port: 5173
   },
   assetsInclude: ['**/*.wav', '**/*.mp3'],
-  publicDir: 'public'
+  publicDir: 'public',
+  test: {
+    globals: true,
+    environment: 'jsdom',
+    setupFiles: './src/test/setup.js',
+    css: true,
+    deps: {
+      inline: ['vitest-canvas-mock']
+    },
+    pool: 'forks',
+    poolOptions: {
+      forks: {
+        singleFork: true
+      }
+    },
+    testTimeout: 10000,
+    hookTimeout: 10000,
+    teardownTimeout: 10000,
+  },
 })
