@@ -362,6 +362,9 @@ export default function TypingGame() {
         />
       )}
 
+      {/* Botón Back to Menu al final de todo */}
+      <button className="menu-btn top-menu-btn" onClick={() => navigate('/')}>Back to Menu</button>
+
       <AnimatePresence>
         {gameEnded && (
           <motion.div className="game-over-modal">

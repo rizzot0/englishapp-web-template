@@ -268,8 +268,19 @@ export default function IdentificationGame({
 
       <AnimatePresence>
         {gameEnded && (
-          <motion.div className="id-end-modal">
-            <div className="modal-content">
+          <motion.div 
+            className="identification-game-end-wrapper"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+          >
+            <motion.div
+              className="identification-game-end-popup"
+              initial={{ scale: 0.8, opacity: 0, y: 50 }}
+              animate={{ scale: 1, opacity: 1, y: 0 }}
+              exit={{ scale: 0.8, opacity: 0, y: 50 }}
+              transition={{ type: 'spring' }}
+            >
               <h2>⏰ Time's Up!</h2>
               <div className="final-stats">
                 <div className="stat-row">
@@ -282,18 +293,23 @@ export default function IdentificationGame({
                   </div>
                 )}
               </div>
-              <div className="modal-buttons">
-                <motion.button onClick={handlePlayAgain} className="play-again-btn">
-                  Play Again
+              <div className="end-screen-buttons">
+                <motion.button onClick={handlePlayAgain} className="play-again-btn" whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+                  🎮 Play Again
                 </motion.button>
-                <motion.button onClick={() => navigate('/')} className="menu-btn">
-                  Back to Menu
+                <motion.button onClick={() => navigate('/')} className="menu-btn" whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+                  🏠 Back to Menu
                 </motion.button>
               </div>
-            </div>
+            </motion.div>
           </motion.div>
         )}
       </AnimatePresence>
+
+      {/* Botón Back to Menu al final de todo, solo si el juego NO ha terminado */}
+      {!gameEnded && (
+        <button className="menu-btn top-menu-btn" onClick={() => navigate('/')}>Back to Menu</button>
+      )}
     </div>
   );
 } 

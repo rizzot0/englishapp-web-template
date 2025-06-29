@@ -394,3 +394,23 @@
     font-size: 2rem;
   }
 }
+
+.top-menu-btn {
+  position: static;
+  display: block;
+  margin: 18px auto 0 auto;
+  background: #fff;
+  color: #333;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  padding: 8px 18px;
+  font-size: 1rem;
+  font-weight: 500;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.07);
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s;
+}
+.top-menu-btn:hover {
+  background: #f0f0f0;
+  color: #1976d2;
+}

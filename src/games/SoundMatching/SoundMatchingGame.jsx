@@ -268,6 +268,11 @@ export default function SoundMatchingGame() {
         </>
       )}
 
+      {/* Botón Back to Menu al final de todo, solo si el juego NO ha terminado */}
+      {!gameEnded && (
+        <button className="menu-btn top-menu-btn" onClick={handleBackToMenu}>Back to Menu</button>
+      )}
+
       <AnimatePresence>
         {gameEnded && (
           <motion.div className="sound-end-modal">
