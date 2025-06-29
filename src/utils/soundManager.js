@@ -1,6 +1,6 @@
 // src/utils/soundManager.js
 import { Howl, Howler } from 'howler';
-import { getMusicMuted } from './musicState';
+import { getMusicMuted } from './musicState.js';
 
 export const DEFAULT_MUSIC_VOLUME = 0.2;
 export const DEFAULT_SFX_VOLUME = 0.5;
@@ -110,5 +110,27 @@ export const preloadCriticalSounds = () => {
   });
 };
 
-// Inicializar sonidos
-preloadCriticalSounds();
+// Exportar el objeto sounds solo para testing
+export function __getSoundsForTest() {
+  return sounds;
+}
+
+// Función para limpiar el caché de sonidos (solo para testing)
+export function __clearSoundsForTest() {
+  Object.keys(sounds).forEach(key => delete sounds[key]);
+}
+
+// Inicializar sonidos solo si no estamos en entorno de test
+definePreload();
+
+function definePreload() {
+  if (
+    typeof process !== 'undefined' &&
+    process.env &&
+    process.env.NODE_ENV === 'test'
+  ) {
+    // No precargar en test
+    return;
+  }
+  preloadCriticalSounds();
+}

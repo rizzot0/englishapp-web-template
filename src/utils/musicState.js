@@ -1,46 +1,67 @@
-import { setVolume, getVolume, DEFAULT_MUSIC_VOLUME } from './soundManager';
-
-const listeners = new Set();
-// Inicializamos como 'false' para romper la dependencia circular en la carga inicial.
-// El estado real se sincronizará con la interacción del usuario.
 let isMuted = false;
+const listeners = [];
 
-const notifyListeners = () => {
-  listeners.forEach(listener => listener(isMuted));
+/**
+ * Obtiene el estado actual de silencio de la música
+ * @returns {boolean} true si la música está silenciada, false en caso contrario
+ */
+export const getMusicMuted = () => {
+  return isMuted;
 };
 
-export const getMusicMuted = () => isMuted;
-
+/**
+ * Cambia el estado de silencio de la música
+ * @returns {boolean} El nuevo estado de silencio
+ */
 export const toggleMusicMuted = () => {
-  const currentVolume = getVolume('music');
-  if (currentVolume > 0) {
-    setVolume('music', 0);
-    isMuted = true;
-  } else {
-    setVolume('music', DEFAULT_MUSIC_VOLUME); // Usar el volumen por defecto
-    isMuted = false;
-  }
+  isMuted = !isMuted;
   notifyListeners();
   return isMuted;
 };
 
-export const setMusicMuted = (value) => {
-  const shouldMute = !!value;
-  if (isMuted !== shouldMute) {
-    if (shouldMute) {
-      setVolume('music', 0);
-    } else {
-      setVolume('music', DEFAULT_MUSIC_VOLUME); // Usar el volumen por defecto
-    }
-    isMuted = shouldMute;
+/**
+ * Establece el estado de silencio de la música
+ * @param {boolean} muted - true para silenciar, false para activar
+ */
+export const setMusicMuted = (muted) => {
+  const newMuted = Boolean(muted);
+  if (newMuted !== isMuted) {
+    isMuted = newMuted;
     notifyListeners();
   }
 };
 
+/**
+ * Suscribe un listener para cambios en el estado de la música
+ * @param {Function} listener - Función a llamar cuando cambie el estado
+ * @returns {Function} Función para cancelar la suscripción
+ */
 export const subscribe = (listener) => {
-  listeners.add(listener);
-  // Devuelve una función para desuscribirse
-  return () => {
-    listeners.delete(listener);
-  };
+  if (typeof listener === 'function') {
+    listeners.push(listener);
+    
+    // Retornar función para cancelar suscripción
+    return () => {
+      const index = listeners.indexOf(listener);
+      if (index > -1) {
+        listeners.splice(index, 1);
+      }
+    };
+  }
+  
+  // Retornar función vacía si el listener no es válido
+  return () => {};
+};
+
+/**
+ * Notifica a todos los listeners sobre cambios en el estado
+ */
+const notifyListeners = () => {
+  listeners.forEach(listener => {
+    try {
+      listener(isMuted);
+    } catch (error) {
+      console.error('Error en listener de música:', error);
+    }
+  });
 };

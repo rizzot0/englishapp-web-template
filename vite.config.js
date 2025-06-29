@@ -36,7 +36,7 @@ export default defineConfig({
   test: {
     globals: true,
     environment: 'jsdom',
-    setupFiles: './src/test/setup.js',
+    setupFiles: './src/test/setup.jsx',
     css: true,
     deps: {
       inline: ['vitest-canvas-mock']
@@ -44,7 +44,7 @@ export default defineConfig({
     pool: 'forks',
     poolOptions: {
       forks: {
-        singleFork: true
+        singleFork: false
       }
     },
     testTimeout: 10000,
