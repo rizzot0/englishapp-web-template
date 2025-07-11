@@ -56,7 +56,11 @@ export const playSound = (name) => {
   if (sound) {
     if (!sound.playing()) {
       console.log(`Playing sound: ${name}`);
-      sound.play();
+      try {
+        sound.play();
+      } catch (error) {
+        console.log(`Could not play sound ${name}:`, error.message);
+      }
     }
   } else {
     // Si no está cargado, lo cargamos y reproducimos
@@ -65,7 +69,11 @@ export const playSound = (name) => {
     sound = sounds[name];
     if (sound) {
       sound.once('load', () => {
-        sound.play();
+        try {
+          sound.play();
+        } catch (error) {
+          console.log(`Could not play sound ${name} after loading:`, error.message);
+        }
       });
     }
   }

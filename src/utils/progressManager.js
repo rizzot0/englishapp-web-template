@@ -170,6 +170,36 @@ export const getProgressSummary = () => {
   const totalGames = progress.statistics.totalGamesPlayed;
   const averageScore = totalGames > 0 ? Math.round(progress.statistics.totalScore / totalGames) : 0;
   
+  // Crear estructura de juegos con estadísticas agregadas
+  const games = {};
+  Object.keys(progress.games || {}).forEach(gameName => {
+    const gameThemes = progress.games[gameName] || {};
+    let totalGamesForGame = 0;
+    let totalScoreForGame = 0;
+    let bestScoreForGame = 0;
+    let totalTimeForGame = 0;
+    
+    Object.keys(gameThemes).forEach(theme => {
+      const themeStats = gameThemes[theme];
+      if (themeStats && themeStats.gamesPlayed > 0) {
+        totalGamesForGame += themeStats.gamesPlayed;
+        totalScoreForGame += themeStats.totalScore || 0;
+        bestScoreForGame = Math.max(bestScoreForGame, themeStats.bestScore || 0);
+        totalTimeForGame += themeStats.bestTime || 0;
+      }
+    });
+    
+    if (totalGamesForGame > 0) {
+      games[gameName] = {
+        totalGames: totalGamesForGame,
+        totalScore: totalScoreForGame,
+        bestScore: bestScoreForGame,
+        averageScore: Math.round(totalScoreForGame / totalGamesForGame),
+        totalTime: totalTimeForGame
+      };
+    }
+  });
+  
   return {
     totalGames: progress.statistics.totalGamesPlayed,
     totalTime: progress.statistics.totalTimePlayed,
@@ -177,7 +207,8 @@ export const getProgressSummary = () => {
     averageScore: averageScore,
     favoriteGame: progress.statistics.favoriteGame,
     currentStreak: progress.statistics.streak,
-    lastPlayed: progress.statistics.lastPlayed
+    lastPlayed: progress.statistics.lastPlayed,
+    games: games
   };
 };
 

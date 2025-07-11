@@ -64,7 +64,7 @@ const Statistics = () => {
   };
 
   const getDatabaseSummary = () => {
-    if (!dbStats.length) return null;
+    if (!dbStats || !dbStats.length) return null;
 
     const totalGames = dbStats.length;
     const totalScore = dbStats.reduce((sum, stat) => sum + (stat.score || 0), 0);
@@ -106,6 +106,11 @@ const Statistics = () => {
 
   const currentSummary = viewMode === 'database' ? getDatabaseSummary() : summary;
 
+  // Verificar si hay datos válidos
+  const hasValidData = currentSummary && 
+    ((viewMode === 'local' && currentSummary.games && Object.keys(currentSummary.games).length > 0) ||
+     (viewMode === 'database' && dbStats && dbStats.length > 0));
+
   // Función para exportar a PDF
   const handleExportPDF = async () => {
     if (!statsRef.current) return;
@@ -130,7 +135,7 @@ const Statistics = () => {
     );
   }
 
-  if (!currentSummary) {
+  if (!hasValidData) {
     return (
       <div className="statistics-page">
         <div className="no-data">
@@ -236,7 +241,7 @@ const Statistics = () => {
         >
           <h2>🎮 Estadísticas por Juego</h2>
           <div className="games-grid">
-            {Object.entries(currentSummary.games).map(([gameName, gameStats]) => {
+            {Object.entries(currentSummary.games || {}).map(([gameName, gameStats]) => {
               const { avgMistakes, avgWpm, avgAccuracy } = getExtraMetrics(gameName, dbStats);
               return (
                 <motion.div
@@ -431,18 +436,18 @@ const DetailedGameStats = ({ gameName, viewMode, dbStats }) => {
 
   return (
     <div className="detailed-stats-content">
-      {Object.entries(detailedStats).map(([theme, stats]) => (
+      {Object.entries(detailedStats || {}).map(([theme, stats]) => (
         <div key={theme} className="theme-stats">
           <h4>{getThemeDisplayName(theme)}</h4>
           <div className="theme-stats-grid">
             <div className="theme-stat">
-              <span>Jugados: {stats.gamesPlayed}</span>
+              <span>Jugados: {stats.gamesPlayed || 0}</span>
             </div>
             <div className="theme-stat">
-              <span>Mejor: {stats.bestScore}</span>
+              <span>Mejor: {stats.bestScore || 0}</span>
             </div>
             <div className="theme-stat">
-              <span>Promedio: {stats.averageScore}</span>
+              <span>Promedio: {stats.averageScore || 0}</span>
             </div>
             {stats.lastPlayed && (
               <div className="theme-stat">
@@ -458,6 +463,10 @@ const DetailedGameStats = ({ gameName, viewMode, dbStats }) => {
 
 // Agregar función para calcular métricas extra por juego
 const getExtraMetrics = (gameType, dbStats) => {
+  if (!dbStats || !Array.isArray(dbStats)) {
+    return { avgMistakes: 'N/A', avgWpm: 'N/A', avgAccuracy: 'N/A' };
+  }
+
   const stats = dbStats.filter(stat => stat.game_type === gameType);
 
   // Promedio de errores
