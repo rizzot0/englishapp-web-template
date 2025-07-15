@@ -1,21 +1,6 @@
 # EnglishApp - Guía de Usuario Completa
 
-## 📖 Índice
-1. [Introducción](#introducción)
-2. [Primeros Pasos](#primeros-pasos)
-3. [Página Principal](#página-principal)
-4. [Juegos Disponibles](#juegos-disponibles)
-5. [Sistema de Audio](#sistema-de-audio)
-6. [Temas Visuales](#temas-visuales)
-7. [Estadísticas y Progreso](#estadísticas-y-progreso)
-8. [Panel del Profesor](#panel-del-profesor)
-9. [Funcionalidades Avanzadas](#funcionalidades-avanzadas)
-10. [Solución de Problemas](#solución-de-problemas)
-11. [Preguntas Frecuentes](#preguntas-frecuentes)
-
----
-
-## 🎯 Introducción
+## Introducción
 
 ### ¿Qué es EnglishApp?
 **EnglishApp** es una aplicación web educativa diseñada para aprender inglés de manera divertida e interactiva a través de juegos. Desarrollada para el Colegio Arauco, combina educación y entretenimiento para hacer el aprendizaje del inglés más efectivo y ameno.
@@ -34,9 +19,7 @@
 - **Profesores**: Para monitorear el progreso de sus estudiantes
 - **Padres**: Para acompañar el aprendizaje de sus hijos
 
----
-
-## 🚀 Primeros Pasos
+## Primeros Pasos
 
 ### Acceso a la Aplicación
 
@@ -65,9 +48,7 @@
    - Título principal "EnglishApp"
    - Subtítulo "¡Aprende inglés jugando! 🎮"
 
----
-
-## 🏠 Página Principal
+## Página Principal
 
 ### Elementos de la Interfaz
 
@@ -122,9 +103,7 @@ Seis tarjetas de juegos con animaciones:
 - **Click en juego**: Te lleva al selector de tema
 - **Click en botones**: Navegación a otras secciones
 
----
-
-## 🎮 Juegos Disponibles
+## Juegos Disponibles
 
 ### 1. Memory Game (Juego de Memoria)
 
@@ -153,7 +132,14 @@ Encuentra pares de cartas que coincidan. Cada carta tiene una imagen y su palabr
 - Empieza por las esquinas
 - Mantén un ritmo constante
 
----
+##### Temáticas y palabras disponibles
+
+| Temática   | Palabras/Opciones                                                                 |
+|-----------|------------------------------------------------------------------------------------|
+| Frutas    | apple, banana, grapes, pear, cherry, kiwi, lemon, orange, blueberry, strawberry, watermelon, coconut, rapsberry, mango, peach, pineapple |
+| Colores   | red, blue, green, yellow                                                           |
+| Formas    | circle, square, star, triangle, rectangle                                          |
+| Emociones | happy, angry, sad, surprised                                                       |
 
 ### 2. Typing Game (Juego de Escritura)
 
@@ -186,7 +172,13 @@ Escribe correctamente las palabras que aparecen junto a las imágenes. Practica 
 - Mantén un ritmo constante
 - Revisa la ortografía antes de enviar
 
----
+##### Temáticas y palabras disponibles
+
+| Temática   | Palabras/Opciones                                                                 |
+|-----------|------------------------------------------------------------------------------------|
+| Frutas    | apple, banana, grapes, pear, cherry, lemon, mango, kiwi, orange, peach, pineapple, blueberry, strawberry, watermelon, coconut, rapsberry, grape |
+| Animales  | cat, dog, fish, elephant, frog, giraffe, monkey, lion, penguin, zebra, tiger, horse, bear, rabbit, fox, wolf, cow, pig, chicken, duck, owl, snake, turtle, dolphin, whale, kangaroo |
+| Familia   | mother, father, brother, sister, grandma, grandpa, uncle, aunt, cousin, niece, nephew, baby, parents |
 
 ### 3. Math Game (Juego de Matemáticas)
 
@@ -218,7 +210,12 @@ Resuelve problemas matemáticos y aprende vocabulario relacionado con números y
 - Usa los dedos si es necesario
 - Mantén la calma con problemas difíciles
 
----
+##### Temáticas y palabras disponibles
+
+| Temática         | Palabras/Opciones                                                                 |
+|------------------|----------------------------------------------------------------------------------|
+| Números          | zero, one, two, three, four, five, six, seven, eight, nine, ten, eleven, twelve, thirteen, fourteen, fifteen, sixteen, seventeen, eighteen, nineteen, twenty |
+| Partes del cuerpo| eye, nose, mouth, ear, head, feet, knee, shoulder, hand, leg, hair, heart         |
 
 ### 4. Sorting Game (Juego de Ordenamiento)
 
@@ -246,7 +243,13 @@ Ordena elementos en la secuencia correcta. Practica el orden lógico y cronológ
 - Usa pistas visuales si están disponibles
 - Revisa el orden antes de finalizar
 
----
+##### Temáticas y palabras disponibles
+
+| Temática           | Palabras/Opciones                                                             |
+|--------------------|-------------------------------------------------------------------------------|
+| Días de la semana  | Monday, Tuesday, Wednesday, Thursday, Friday, Saturday, Sunday                |
+| Meses del año      | January, February, March, April, May, June, July, August, September, October, November, December |
+| Estaciones         | Spring, Summer, Autumn, Winter                                                |
 
 ### 5. Sound Matching Game (Juego de Coincidencia de Sonidos)
 
@@ -278,7 +281,12 @@ Escucha sonidos y empareja con las imágenes correspondientes. Desarrolla la com
 - Usa auriculares para mejor calidad
 - Relaciona el sonido con experiencias previas
 
----
+##### Temáticas y palabras disponibles
+
+| Temática   | Palabras/Opciones                                                                 |
+|-----------|------------------------------------------------------------------------------------|
+| Animales  | dog, cat, lion, zebra, frog, monkey, elephant, penguin, tiger, giraffe, fox, rabbit, horse, cow, pig, duck, monkey2 |
+| Objetos/Formas | circle, square, star, triangle, rectangle                                      |
 
 ### 6. Identification Game (Juego de Identificación)
 
@@ -308,9 +316,16 @@ Identifica objetos y palabras correctamente. Desarrolla vocabulario y reconocimi
 - Lee todas las opciones antes de elegir
 - Usa el contexto para ayudarte
 
----
+##### Temáticas y palabras disponibles
 
-## 🎵 Sistema de Audio
+| Temática         | Palabras/Opciones                                                                 |
+|------------------|----------------------------------------------------------------------------------|
+| Partes del cuerpo| eye, nose, mouth, ear, head, feet, knee, shoulder, hand, leg, hair, heart         |
+| Frutas           | apple, banana, cherry, grape, kiwi, lemon, mango, orange, peach, pear, pineapple, blueberry, strawberry, watermelon, coconut, rapsberry |
+| Animales         | cat, dog, elephant, fish, frog, giraffe, lion, monkey, penguin, tiger, zebra, horse, cow, pig, fox, rabbit, duck, monkey2 |
+| Familia          | aunt, brother, father, grandma, grandpa, mother, sister, uncle                   |
+
+## Sistema de Audio
 
 ### Controles de Audio
 
@@ -349,9 +364,7 @@ Identifica objetos y palabras correctamente. Desarrolla vocabulario y reconocimi
 - **Dispositivos**: Computadoras, tablets, móviles
 - **Auriculares**: Recomendados para mejor experiencia
 
----
-
-## 🌙 Temas Visuales
+## Temas Visuales
 
 ### Modo Claro (Light Mode)
 - **Fondo**: Blanco o tonos claros
@@ -377,9 +390,7 @@ Identifica objetos y palabras correctamente. Desarrolla vocabulario y reconocimi
 - **Preferencia Personal**: Cada usuario puede elegir
 - **Accesibilidad**: Mejor contraste según necesidades
 
----
-
-## 📊 Estadísticas y Progreso
+## Estadísticas y Progreso
 
 ### Acceso a Estadísticas
 1. **Desde la Página Principal**: Botón "📊 Mis Estadísticas"
@@ -436,9 +447,7 @@ Identifica objetos y palabras correctamente. Desarrolla vocabulario y reconocimi
 3. **Descarga**: Archivo .xlsx automático
 4. **Uso**: Análisis detallado de datos
 
----
-
-## 👨‍🏫 Panel del Profesor
+## Panel del Profesor
 
 ### Acceso al Panel
 1. **Desde Estadísticas**: Botón "Panel del Profesor"
@@ -475,9 +484,7 @@ Identifica objetos y palabras correctamente. Desarrolla vocabulario y reconocimi
 - **Personalización**: Enfoque individual
 - **Evaluación**: Medición de aprendizaje
 
----
-
-## ⚡ Funcionalidades Avanzadas
+## Funcionalidades Avanzadas
 
 ### Modo Offline
 - **Funcionamiento**: La app funciona sin internet
@@ -500,9 +507,7 @@ Identifica objetos y palabras correctamente. Desarrolla vocabulario y reconocimi
 - **Tema Visual**: Persistente entre sesiones
 - **Configuración de Juegos**: Dificultad preferida
 
----
-
-## 🔧 Solución de Problemas
+## Solución de Problemas
 
 ### Problemas Comunes
 
@@ -535,9 +540,7 @@ Identifica objetos y palabras correctamente. Desarrolla vocabulario y reconocimi
 - **Horarios**: Lunes a Viernes, 8:00 - 17:00
 - **Respuesta**: En 24-48 horas
 
----
-
-## ❓ Preguntas Frecuentes
+## Preguntas Frecuentes
 
 ### ¿Es Gratuita la Aplicación?
 **Sí**, EnglishApp es completamente gratuita para todos los estudiantes del Colegio Arauco.

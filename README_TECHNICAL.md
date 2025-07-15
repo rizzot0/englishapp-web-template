@@ -1,25 +1,6 @@
 # EnglishApp - Documentación Técnica Completa
 
-## 📋 Índice
-1. [Arquitectura del Sistema](#arquitectura-del-sistema)
-2. [Stack Tecnológico](#stack-tecnológico)
-3. [Estructura del Proyecto](#estructura-del-proyecto)
-4. [Componentes Principales](#componentes-principales)
-5. [Sistema de Juegos](#sistema-de-juegos)
-6. [Gestión de Estado](#gestión-de-estado)
-7. [Sistema de Audio](#sistema-de-audio)
-8. [Base de Datos y Persistencia](#base-de-datos-y-persistencia)
-9. [PWA y Service Workers](#pwa-y-service-workers)
-10. [Sistema de Temas](#sistema-de-temas)
-11. [Exportación de Datos](#exportación-de-datos)
-12. [Configuración de Desarrollo](#configuración-de-desarrollo)
-13. [Deployment](#deployment)
-14. [Testing](#testing)
-15. [Optimizaciones](#optimizaciones)
-
----
-
-## 🏗️ Arquitectura del Sistema
+## Arquitectura del Sistema
 
 ### Patrón de Arquitectura
 La aplicación sigue una arquitectura **Component-Based** con React, utilizando:
@@ -604,3 +585,65 @@ describe('Home Component', () => {
 
 **Versión**: 1.0.0  
 **Última actualización**: Junio 2025  
+
+---
+
+## 🕹️ Cómo agregar un nuevo juego
+
+1. **Crea una carpeta en `src/games/` con el nombre del juego**
+   - Ejemplo: `src/games/MyNewGame/`
+2. **Crea el componente principal**
+   - Archivo: `MyNewGame.jsx`
+   - Debe exportar un componente React funcional.
+3. **Crea el archivo de estilos**
+   - Archivo: `MyNewGame.css`
+   - Importa el CSS en el componente principal.
+4. **Agrega la lógica del juego**
+   - Usa hooks para manejar estado y lógica.
+   - Integra audio usando `soundManager.js` si es necesario.
+   - Si el juego requiere estadísticas, usa `progressManager.js` y/o Supabase.
+5. **Agrega la opción de navegación**
+   - Modifica la página principal (`Home.jsx`) para incluir el nuevo juego en la grilla.
+   - Si el juego tiene selector de temática, crea un componente en `src/pages/` siguiendo el patrón de los existentes.
+6. **Actualiza la guía de usuario y técnica**
+   - Documenta el nuevo juego en ambos archivos markdown.
+7. **Ejemplo de estructura mínima:**
+```jsx
+// src/games/MyNewGame/MyNewGame.jsx
+import React from 'react';
+import './MyNewGame.css';
+
+export default function MyNewGame() {
+  // Lógica y estado aquí
+  return <div>My New Game</div>;
+}
+```
+
+---
+
+## 🎨 Cómo agregar una temática a un juego
+
+1. **Identifica el juego y localiza la estructura de temáticas**
+   - Por lo general, es un objeto o array en el archivo principal del juego (por ejemplo, `themes`, `wordSets`, `themeData`, etc.).
+2. **Agrega la nueva temática como una nueva clave o elemento**
+   - Ejemplo para Memory Game:
+```js
+const themes = {
+  ...
+  newTheme: [
+    { word: 'example1', image: 'example1.webp' },
+    { word: 'example2', image: 'example2.webp' },
+    // ...
+  ],
+};
+```
+3. **Asegúrate de que el selector de temática la incluya**
+   - Modifica el componente selector correspondiente para mostrar la nueva opción.
+4. **Agrega los assets necesarios**
+   - Coloca las imágenes o sonidos en `public/assets/images/` o `public/assets/sounds/`.
+5. **Prueba la integración**
+   - Inicia la app y verifica que la temática aparece y funciona correctamente.
+6. **Actualiza la documentación**
+   - Añade la temática en la guía de usuario y técnica.
+
+---
