@@ -28,7 +28,7 @@
    - Asegúrate de tener una conexión a internet estable
 
 2. **Navegar a la Aplicación**
-   - Ve a la URL de EnglishApp
+   - Ve a la URL: https://englishappca.netlify.app/
    - La aplicación se cargará automáticamente
 
 3. **Pantalla de Carga**
@@ -555,7 +555,7 @@ Identifica objetos y palabras correctamente. Desarrolla vocabulario y reconocimi
 **Sí**, todos los datos se almacenan de forma segura y solo son accesibles por el usuario y profesores autorizados.
 
 ### ¿Puedo Jugar Sin Internet?
-**Sí**, la aplicación funciona offline, aunque algunas funciones como guardar estadísticas requieren conexión.
+No, se requiere conexión a internet para que la aplicación funcione correctamente. Algunas funciones como el guardado de estadísticas y la navegación dependen de estar en línea.
 
 ### ¿Hay Límite de Juegos?
 **No**, puedes jugar tantas veces como quieras. No hay límites de uso.
