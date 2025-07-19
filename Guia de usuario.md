@@ -572,6 +572,4 @@ La dificultad se selecciona en cada juego individualmente. No hay configuración
 ### ¿Puedo Usar la App en la Escuela?
 **Sí**, la aplicación está diseñada para uso educativo y es completamente apropiada para el entorno escolar.
 
-**EnglishApp** - ¡Aprende inglés de forma divertida y efectiva! 🎓🎮
 
-*Desarrollado con ❤️ para el Colegio Arauco*
